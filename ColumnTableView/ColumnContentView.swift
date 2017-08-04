@@ -9,21 +9,14 @@
 import UIKit
 
 class ColumnContentView: UIView {
-    private var strongFieldContentReference: UIView?{
-        didSet{
-            self.fieldContent = self.strongFieldContentReference
-        }
-    }
-    private var strongWidthConstraintReference: NSLayoutConstraint?{
-        didSet{
-            self.widthConstraint = self.strongWidthConstraintReference
-        }
-    }
-    @IBOutlet weak var fieldContent: UIView!
-    @IBOutlet weak var widthConstraint: NSLayoutConstraint!
+    private(set) var fieldContent: UIView!
+    
+    private var widthConstraint: NSLayoutConstraint!
+    
+    var showingModeWidth: CGFloat = 0
     
     init(withField field: UIView){
-        self.strongFieldContentReference = field
+        self.fieldContent = field
         super.init(frame: CGRect.zero)
         self.setupViews()
     }
@@ -36,5 +29,20 @@ class ColumnContentView: UIView {
     private func setupViews(){
         
     }
+ 
+    func setWidth(constraint: NSLayoutConstraint){
+        if let actualWidthConstraint = self.widthConstraint{
+            NSLayoutConstraint.deactivate([actualWidthConstraint])
+        }
+        self.widthConstraint = constraint
+        self.showingModeWidth = self.widthConstraint.constant
+    }
     
+    func show(){
+        self.widthConstraint.constant = self.showingModeWidth
+    }
+    
+    func hide(){
+        self.widthConstraint.constant = 0
+    }
 }
