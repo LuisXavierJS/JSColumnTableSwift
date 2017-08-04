@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -83,44 +82,41 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V6a-up-qN0">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="128"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m04-TS-P5u">
-                                        <rect key="frame" x="0.0" y="54" width="125" height="21"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RQx-QG-7uM">
+                                        <rect key="frame" x="0.0" y="0.0" width="225" height="128"/>
+                                        <color key="backgroundColor" red="0.30980393290000002" green="0.2039215714" blue="0.039215687659999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="uYZ-D9-RId"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-rW-WJW">
+                                        <rect key="frame" x="225" y="0.0" width="0.0" height="128"/>
                                         <color key="backgroundColor" red="0.72156864399999998" green="0.88627451660000001" blue="0.59215688710000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ytD-TR-K0n">
-                                        <rect key="frame" x="125" y="54" width="125" height="21"/>
-                                        <color key="backgroundColor" red="0.57254904510000004" green="0.0" blue="0.23137255009999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VYK-iF-jLL">
-                                        <rect key="frame" x="250" y="54" width="125" height="21"/>
-                                        <color key="backgroundColor" red="0.21960784489999999" green="0.0078431377190000002" blue="0.85490196939999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                        <constraints>
+                                            <constraint firstAttribute="width" id="aDI-Mr-gmr"/>
+                                        </constraints>
+                                    </view>
+                                    <view alpha="0.94999998807907104" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zlr-qN-MAd">
+                                        <rect key="frame" x="225" y="0.0" width="150" height="128"/>
+                                        <color key="backgroundColor" red="0.30980393290000002" green="0.2039215714" blue="0.039215687659999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="150" id="Mx0-UB-wyV"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="ytD-TR-K0n" firstAttribute="leading" secondItem="m04-TS-P5u" secondAttribute="trailing" id="0yI-LI-rHU"/>
-                                    <constraint firstAttribute="trailing" secondItem="VYK-iF-jLL" secondAttribute="trailing" id="3jo-cQ-1R3"/>
-                                    <constraint firstItem="ytD-TR-K0n" firstAttribute="width" relation="greaterThanOrEqual" secondItem="V6a-up-qN0" secondAttribute="width" multiplier="0.3333" id="5Fh-jX-IR1"/>
-                                    <constraint firstItem="VYK-iF-jLL" firstAttribute="width" relation="lessThanOrEqual" secondItem="V6a-up-qN0" secondAttribute="width" multiplier="0.5" id="9IV-ij-JWE"/>
+                                    <constraint firstAttribute="bottom" secondItem="VpY-rW-WJW" secondAttribute="bottom" id="3ze-UE-hvo"/>
+                                    <constraint firstAttribute="bottom" secondItem="Zlr-qN-MAd" secondAttribute="bottom" id="5lS-8u-6fD"/>
+                                    <constraint firstItem="VpY-rW-WJW" firstAttribute="leading" secondItem="RQx-QG-7uM" secondAttribute="trailing" id="6XF-mH-ZUS"/>
+                                    <constraint firstAttribute="trailing" secondItem="Zlr-qN-MAd" secondAttribute="trailing" id="7lx-mN-rGT"/>
                                     <constraint firstAttribute="height" constant="128" id="Ahz-Ho-tfa"/>
-                                    <constraint firstItem="VYK-iF-jLL" firstAttribute="width" relation="greaterThanOrEqual" secondItem="V6a-up-qN0" secondAttribute="width" multiplier="0.333" id="Lqe-Pl-agI"/>
-                                    <constraint firstItem="m04-TS-P5u" firstAttribute="leading" secondItem="V6a-up-qN0" secondAttribute="leading" id="PYC-Oi-efa"/>
-                                    <constraint firstItem="VYK-iF-jLL" firstAttribute="centerY" secondItem="V6a-up-qN0" secondAttribute="centerY" id="Q7C-1l-lXk"/>
-                                    <constraint firstItem="VYK-iF-jLL" firstAttribute="leading" secondItem="ytD-TR-K0n" secondAttribute="trailing" id="a6M-Xg-tG6"/>
-                                    <constraint firstItem="m04-TS-P5u" firstAttribute="width" relation="greaterThanOrEqual" secondItem="V6a-up-qN0" secondAttribute="width" multiplier="0.3333" id="aKn-9J-mu2"/>
-                                    <constraint firstItem="m04-TS-P5u" firstAttribute="width" relation="lessThanOrEqual" secondItem="V6a-up-qN0" secondAttribute="width" multiplier="0.5" id="bXx-QN-aPU"/>
-                                    <constraint firstItem="ytD-TR-K0n" firstAttribute="centerY" secondItem="V6a-up-qN0" secondAttribute="centerY" id="kMv-FG-Rbw"/>
-                                    <constraint firstItem="ytD-TR-K0n" firstAttribute="width" relation="lessThanOrEqual" secondItem="V6a-up-qN0" secondAttribute="width" multiplier="0.5" id="rSZ-Jg-6H5"/>
-                                    <constraint firstItem="m04-TS-P5u" firstAttribute="centerY" secondItem="V6a-up-qN0" secondAttribute="centerY" id="wka-r6-6bH"/>
+                                    <constraint firstItem="Zlr-qN-MAd" firstAttribute="leading" secondItem="VpY-rW-WJW" secondAttribute="trailing" id="AoX-Zg-AYq"/>
+                                    <constraint firstItem="RQx-QG-7uM" firstAttribute="top" secondItem="V6a-up-qN0" secondAttribute="top" id="DuJ-dS-Uz1"/>
+                                    <constraint firstItem="Zlr-qN-MAd" firstAttribute="top" secondItem="V6a-up-qN0" secondAttribute="top" id="K8R-eN-Zry"/>
+                                    <constraint firstAttribute="bottom" secondItem="RQx-QG-7uM" secondAttribute="bottom" id="ZhY-wf-j8R"/>
+                                    <constraint firstItem="VpY-rW-WJW" firstAttribute="top" secondItem="V6a-up-qN0" secondAttribute="top" id="cro-Tf-rTK"/>
+                                    <constraint firstItem="RQx-QG-7uM" firstAttribute="leading" secondItem="V6a-up-qN0" secondAttribute="leading" id="m85-cf-uni"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -134,7 +130,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qqb-BR-fX3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="487" y="132"/>
+            <point key="canvasLocation" x="485.60000000000002" y="131.78410794602701"/>
         </scene>
     </scenes>
 </document>

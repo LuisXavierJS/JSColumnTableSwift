@@ -12,15 +12,11 @@ class ColumnsHeaderView: UITableViewHeaderFooterView {
     
     let containerView: ColumnsViewContainer = ColumnsViewContainer()
     
-    fileprivate var viewsAreSettedUp: Bool = false
-    
     fileprivate lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
         return self.createContainerConstraintsToActivateOnSetup()
     }()
     
     func setupViews(){
-        if self.viewsAreSettedUp { return }
-        
         self.containerView.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(containerView)
@@ -38,13 +34,11 @@ class ColumnsHeaderView: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         self.setupViews()
-        self.viewsAreSettedUp = true
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setupViews()
-        self.viewsAreSettedUp = true
     }
 
 }

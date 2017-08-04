@@ -9,13 +9,22 @@
 import UIKit
 
 class ColumnContentView: UIView {
-
-    private func setupViews(){
-        
+    private var strongFieldContentReference: UIView?{
+        didSet{
+            self.fieldContent = self.strongFieldContentReference
+        }
     }
+    private var strongWidthConstraintReference: NSLayoutConstraint?{
+        didSet{
+            self.widthConstraint = self.strongWidthConstraintReference
+        }
+    }
+    @IBOutlet weak var fieldContent: UIView!
+    @IBOutlet weak var widthConstraint: NSLayoutConstraint!
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(withField field: UIView){
+        self.strongFieldContentReference = field
+        super.init(frame: CGRect.zero)
         self.setupViews()
     }
     
@@ -24,5 +33,8 @@ class ColumnContentView: UIView {
         self.setupViews()
     }
     
-
+    private func setupViews(){
+        
+    }
+    
 }

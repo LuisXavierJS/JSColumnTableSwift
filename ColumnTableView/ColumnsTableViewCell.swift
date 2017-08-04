@@ -9,21 +9,16 @@
 import UIKit
 
 class ColumnsTableViewCell: UITableViewCell {
-    
     let containerView: ColumnsViewContainer = ColumnsViewContainer()
-    
-    fileprivate var viewsAreSettedUp: Bool = false
     
     fileprivate lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
         return self.createContainerConstraintsToActivateOnSetup()
     }()
     
-    func setupViews(){
-        if self.viewsAreSettedUp { return }
-        
+    func setupViews(){        
         self.containerView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(containerView)
+        self.contentView.addSubview(containerView)
         
         NSLayoutConstraint.activateIfNotActive(self.containerConstraintsToActivateOnSetup)
     }
@@ -35,16 +30,38 @@ class ColumnsTableViewCell: UITableViewCell {
         return containerConstraints
     }
     
+    private func setCollumnsIfNotSetted(){
+        if self.containerView.columns.isEmpty && self.bounds != CGRect.zero{
+            self.containerView.setColumnFields(self.fieldsToShowOnColumnsViewContainer())
+        }
+    }
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupViews()
-        self.viewsAreSettedUp = true
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setupViews()
-        self.viewsAreSettedUp = true
+    }
+    
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        self.setCollumnsIfNotSetted()
     }
 
+    func fieldsToShowOnColumnsViewContainer() -> [UIView] {
+        return []
+    }
+}
+
+
+class SpecialColumnsTableViewCell: ColumnsTableViewCell {
+    let atualizar = UISwitch()
+    let nome = UILabel()
+    let novoNome = UITextField()
+    let executar = UIButton()
+    
+    
 }
