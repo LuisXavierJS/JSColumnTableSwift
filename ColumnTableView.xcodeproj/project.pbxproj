@@ -20,6 +20,7 @@
 		8E8A03971F340C9C0053CD09 /* ColumnsViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A03961F340C9C0053CD09 /* ColumnsViewContainer.swift */; };
 		8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A03981F340EE30053CD09 /* ColumnsHeaderView.swift */; };
 		8E8A039C1F342B570053CD09 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A039B1F342B570053CD09 /* Helpers.swift */; };
+		8E8A039E1F342F0D0053CD09 /* ColumnContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A039D1F342F0D0053CD09 /* ColumnContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		8E8A03961F340C9C0053CD09 /* ColumnsViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnsViewContainer.swift; sourceTree = "<group>"; };
 		8E8A03981F340EE30053CD09 /* ColumnsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnsHeaderView.swift; sourceTree = "<group>"; };
 		8E8A039B1F342B570053CD09 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		8E8A039D1F342F0D0053CD09 /* ColumnContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +138,7 @@
 		8E8A038C1F3405110053CD09 /* ColumnTableView */ = {
 			isa = PBXGroup;
 			children = (
+				8E8A039D1F342F0D0053CD09 /* ColumnContentView.swift */,
 				8E8A03961F340C9C0053CD09 /* ColumnsViewContainer.swift */,
 				8E8A03941F340BA00053CD09 /* ColumnsTableViewCell.swift */,
 				8E8A03981F340EE30053CD09 /* ColumnsHeaderView.swift */,
@@ -338,6 +341,7 @@
 				8E8A03951F340BA00053CD09 /* ColumnsTableViewCell.swift in Sources */,
 				8E8A039C1F342B570053CD09 /* Helpers.swift in Sources */,
 				8E8A038E1F3405330053CD09 /* ColumnsTableView.swift in Sources */,
+				8E8A039E1F342F0D0053CD09 /* ColumnContentView.swift in Sources */,
 				8E8A03641F3404040053CD09 /* ColumnTableView.xcdatamodeld in Sources */,
 				8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */,
 				8E8A035C1F3404040053CD09 /* AppDelegate.swift in Sources */,

@@ -14,8 +14,8 @@ class ColumnsTableViewCell: UITableViewCell {
     
     fileprivate var viewsAreSettedUp: Bool = false
     
-    lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
-        return self.createContainerConstraints()
+    fileprivate lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
+        return self.createContainerConstraintsToActivateOnSetup()
     }()
     
     func setupViews(){
@@ -28,7 +28,7 @@ class ColumnsTableViewCell: UITableViewCell {
         NSLayoutConstraint.activateIfNotActive(self.containerConstraintsToActivateOnSetup)
     }
     
-    func createContainerConstraints() -> [NSLayoutConstraint] {
+    func createContainerConstraintsToActivateOnSetup() -> [NSLayoutConstraint] {
         var containerConstraints: [NSLayoutConstraint] = []
         containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", metrics: nil, views: ["container":self.containerView]))
         containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", metrics: nil, views: ["container":self.containerView]))
