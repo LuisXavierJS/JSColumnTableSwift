@@ -15,6 +15,10 @@
 		8E8A03691F3404040053CD09 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E8A03671F3404040053CD09 /* LaunchScreen.storyboard */; };
 		8E8A03741F3404040053CD09 /* ColumnTableViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A03731F3404040053CD09 /* ColumnTableViewTests.swift */; };
 		8E8A037F1F3404040053CD09 /* ColumnTableViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A037E1F3404040053CD09 /* ColumnTableViewUITests.swift */; };
+		8E8A038E1F3405330053CD09 /* ColumnsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A038D1F3405330053CD09 /* ColumnsTableView.swift */; };
+		8E8A03951F340BA00053CD09 /* ColumnsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A03941F340BA00053CD09 /* ColumnsTableViewCell.swift */; };
+		8E8A03971F340C9C0053CD09 /* ColumnsViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A03961F340C9C0053CD09 /* ColumnsViewContainer.swift */; };
+		8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A03981F340EE30053CD09 /* ColumnsHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,10 @@
 		8E8A037A1F3404040053CD09 /* ColumnTableViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ColumnTableViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E8A037E1F3404040053CD09 /* ColumnTableViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnTableViewUITests.swift; sourceTree = "<group>"; };
 		8E8A03801F3404040053CD09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8E8A038D1F3405330053CD09 /* ColumnsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnsTableView.swift; sourceTree = "<group>"; };
+		8E8A03941F340BA00053CD09 /* ColumnsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnsTableViewCell.swift; sourceTree = "<group>"; };
+		8E8A03961F340C9C0053CD09 /* ColumnsViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnsViewContainer.swift; sourceTree = "<group>"; };
+		8E8A03981F340EE30053CD09 /* ColumnsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnsHeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,13 +107,8 @@
 		8E8A035A1F3404040053CD09 /* ColumnTableView */ = {
 			isa = PBXGroup;
 			children = (
-				8E8A035B1F3404040053CD09 /* AppDelegate.swift */,
-				8E8A035D1F3404040053CD09 /* ViewController.swift */,
-				8E8A035F1F3404040053CD09 /* Main.storyboard */,
-				8E8A03651F3404040053CD09 /* Assets.xcassets */,
-				8E8A03671F3404040053CD09 /* LaunchScreen.storyboard */,
-				8E8A036A1F3404040053CD09 /* Info.plist */,
-				8E8A03621F3404040053CD09 /* ColumnTableView.xcdatamodeld */,
+				8E8A03911F34055D0053CD09 /* Resources */,
+				8E8A03901F34054C0053CD09 /* Sources */,
 			);
 			path = ColumnTableView;
 			sourceTree = "<group>";
@@ -126,6 +129,63 @@
 				8E8A03801F3404040053CD09 /* Info.plist */,
 			);
 			path = ColumnTableViewUITests;
+			sourceTree = "<group>";
+		};
+		8E8A038C1F3405110053CD09 /* ColumnTableView */ = {
+			isa = PBXGroup;
+			children = (
+				8E8A03961F340C9C0053CD09 /* ColumnsViewContainer.swift */,
+				8E8A03941F340BA00053CD09 /* ColumnsTableViewCell.swift */,
+				8E8A03981F340EE30053CD09 /* ColumnsHeaderView.swift */,
+				8E8A038D1F3405330053CD09 /* ColumnsTableView.swift */,
+			);
+			name = ColumnTableView;
+			sourceTree = "<group>";
+		};
+		8E8A038F1F3405390053CD09 /* Fuking Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8E8A035D1F3404040053CD09 /* ViewController.swift */,
+			);
+			name = "Fuking Controllers";
+			sourceTree = "<group>";
+		};
+		8E8A03901F34054C0053CD09 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				8E8A035B1F3404040053CD09 /* AppDelegate.swift */,
+				8E8A038C1F3405110053CD09 /* ColumnTableView */,
+				8E8A038F1F3405390053CD09 /* Fuking Controllers */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		8E8A03911F34055D0053CD09 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8E8A03931F3405790053CD09 /* Storyboards */,
+				8E8A03921F3405680053CD09 /* Application */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		8E8A03921F3405680053CD09 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				8E8A036A1F3404040053CD09 /* Info.plist */,
+				8E8A03651F3404040053CD09 /* Assets.xcassets */,
+				8E8A03621F3404040053CD09 /* ColumnTableView.xcdatamodeld */,
+			);
+			name = Application;
+			sourceTree = "<group>";
+		};
+		8E8A03931F3405790053CD09 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				8E8A035F1F3404040053CD09 /* Main.storyboard */,
+				8E8A03671F3404040053CD09 /* LaunchScreen.storyboard */,
+			);
+			name = Storyboards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,8 +322,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E8A03971F340C9C0053CD09 /* ColumnsViewContainer.swift in Sources */,
 				8E8A035E1F3404040053CD09 /* ViewController.swift in Sources */,
+				8E8A03951F340BA00053CD09 /* ColumnsTableViewCell.swift in Sources */,
+				8E8A038E1F3405330053CD09 /* ColumnsTableView.swift in Sources */,
 				8E8A03641F3404040053CD09 /* ColumnTableView.xcdatamodeld in Sources */,
+				8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */,
 				8E8A035C1F3404040053CD09 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
