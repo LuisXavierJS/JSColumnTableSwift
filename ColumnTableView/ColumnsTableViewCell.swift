@@ -8,14 +8,20 @@
 
 import UIKit
 
-class ColumnsTableViewCell: UITableViewCell {
+class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController {
     let containerView: ColumnsViewContainer = ColumnsViewContainer()
     
-    fileprivate lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
+    private lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
         return self.createContainerConstraintsToActivateOnSetup()
     }()
     
-    func setupViews(){        
+    var columnsFields: [ColumnFieldContent] {
+        return []
+    }
+    
+    func setupViews(){
+        self.containerView.delegate = self
+        
         self.containerView.translatesAutoresizingMaskIntoConstraints = false
         
         self.contentView.addSubview(containerView)
@@ -30,12 +36,6 @@ class ColumnsTableViewCell: UITableViewCell {
         return containerConstraints
     }
     
-    private func setCollumnsIfNotSetted(){
-        if self.containerView.columns.isEmpty && self.bounds != CGRect.zero{
-            self.containerView.setColumnFields(self.fieldsToShowOnColumnsViewContainer())
-        }
-    }
-    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupViews()
@@ -45,15 +45,6 @@ class ColumnsTableViewCell: UITableViewCell {
         super.init(coder: aDecoder)
         self.setupViews()
     }
-    
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-        self.setCollumnsIfNotSetted()
-    }
-
-    func fieldsToShowOnColumnsViewContainer() -> [UIView] {
-        return []
-    }
 }
 
 
@@ -62,6 +53,14 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
     let nome = UILabel()
     let novoNome = UITextField()
     let executar = UIButton()
+    let imagem = UIImageView()
     
+    override var columnsFields: [ColumnFieldContent] {
+        return [ColumnFieldContent(atualizar,title: "atualizar"),
+                ColumnFieldContent(nome, title: "nome"),
+                ColumnFieldContent(novoNome,title: "novoNome"),
+                ColumnFieldContent(executar,title: "executar"),
+                ColumnFieldContent(imagem,title:"imagem")]
+    }
     
 }

@@ -10,15 +10,32 @@ import UIKit
 
 
 @objc protocol ColumnsViewContainerController: class {
+    var columnsFields: [ColumnFieldContent] {get}
+    
+//  Informa coluna que preferencialmente tera seu tamanho variavel conforme a variacao de tamanho da superview e das demais colunas
+// - Se nao for implementado, o default sera assumido como a coluna de maior tamanho na tabela.
     @objc optional var mainColumnIndex: Int {get}
-    @objc optional func initialFixedWidthForColumn(at index: Int) -> CGFloat
+    
+//  Informa a prioridade para ajuste de comprimento de uma determinada coluna, caso outra coluna seja ocultada ou exibida no container.
+// - Se nao for implementado, a prioridade de redimensionamento sera igual para todas as colunas
+// - Se a soma de prioridade de todas as colunas for inferior a 0 ou superior a 100, as colunas finais podem nao respeitar as prioridades de redimensionamento desejadas.
+    @objc optional func redimensioningPriority(forColumnAt index: Int) -> CGFloat
+    
+//  Informa o tamanho do campo dentro da coluna
+// - Se nao for implementado, o campo tera um tamanho exatamente igual ao da coluna.
+// - Se o tamanho for invalido (menor que CGSize.zero ou maior que o tamanho da coluna), o campo tera o tamanho igual ao da coluna.
+    @objc optional func preferredSizeForField(ofColumnAt index: Int) -> CGSize
+    
+//  Informa a preferencia de largura inicial para uma coluna durante o layout:
+// -  Se nao for implementado, a preferencia de largura inicial sera igual para todas as colunas.
+// -  Se for implementado mas retornar valores que nao representem o real tamanho da ColumnsViewCell, as colunas finais podem desaparecer ou a mainColumn pode aumentar para compensar a diferenca de tamanho.
+    @objc optional func preferredInitialFixedWidthForColumn(at index: Int) -> CGFloat
 }
 
 class ColumnsViewContainer: UIView {
     private(set) var columns: [ColumnContentView] = []
-    weak var delegate: ColumnsViewContainerController?
-    
-    
+    weak var mainColumn: ColumnContentView?
+    weak var delegate: ColumnsViewContainerController!
     
     convenience init(){
         self.init(frame: CGRect.zero)
@@ -52,7 +69,7 @@ class ColumnsViewContainer: UIView {
         let isFirstColumn = rightCollumn == nil
         
         let horizontalViews = isFirstColumn ? ["column":leftColumn] : ["rightCollumn":rightCollumn!,"column":leftColumn]
-        let rightView = (isFirstColumn ? "|" : "rightCollumn")
+        let rightView = (isFirstColumn ? "|" : "[rightCollumn]")
         let horizontalDimensionFormat = "H:" + rightView + "[column]"
         
         var constraintsToActivate: [NSLayoutConstraint] = []
@@ -65,7 +82,7 @@ class ColumnsViewContainer: UIView {
         NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }
     
-    private func setColumnsEdgesConstraints(){
+    private func createAndSetColumnsEdgesConstraints(){
         var lastColumn: ColumnContentView?
         self.columns.forEach { (column) in
             self.setEdgeConstraints(rightCollumn: lastColumn, leftColumn: column)
@@ -78,13 +95,13 @@ class ColumnsViewContainer: UIView {
         }
     }
     
-    private func getInitialWidthDefinitionsOfColumns() -> [(column: Int, width: CGFloat)]{
+    private func getWidthDefinitionsOfColumns() -> [(column: Int, width: CGFloat)]{
         var widthDefinitions: [(column: Int, width: CGFloat)] = []
         var index = 0
         var totalColumnsWidth: CGFloat = 0
         self.columns.forEach { _ in
-            let preferredWidth = self.delegate?.initialFixedWidthForColumn?(at: index) ?? self.bounds.width/CGFloat(self.columns.count)
-            let width = min(preferredWidth, self.bounds.width - (totalColumnsWidth + preferredWidth))
+            let preferredWidth = self.delegate?.preferredInitialFixedWidthForColumn?(at: index) ?? self.bounds.width/CGFloat(self.columns.count)
+            let width = min(preferredWidth, max(self.bounds.width - totalColumnsWidth,0))
             widthDefinitions.append((column: index, width: width))
             totalColumnsWidth+=width
             index+=1
@@ -92,11 +109,11 @@ class ColumnsViewContainer: UIView {
         return widthDefinitions
     }
     
-    private func setColumnsWidthConstraints(){
-        //cria constraints de comprimento e seta nas colunas
+    private func createAndSetColumnsWidthConstraints(){
         var constraintsToActivate: [NSLayoutConstraint] = []
-        let widthDefinitions = self.getInitialWidthDefinitionsOfColumns()
+        let widthDefinitions = self.getWidthDefinitionsOfColumns()
         let mainColumnIndex = self.delegate?.mainColumnIndex ?? widthDefinitions.sorted(by: {$0.width > $1.width}).first?.column ?? 0
+        self.mainColumn = self.columns[mainColumnIndex]
         widthDefinitions.forEach { (columnIndex,width) in
             let relation: NSLayoutRelation = columnIndex == mainColumnIndex ? .greaterThanOrEqual : .equal
             let constraint = NSLayoutConstraint(item: self.columns[columnIndex],
@@ -113,18 +130,35 @@ class ColumnsViewContainer: UIView {
     }
     
     private func updateColumnsWidthConstraints(){
-        //atualiza os valores das constraints de comprimento das colunas
+        let widthDefinitions = self.getWidthDefinitionsOfColumns()
+        widthDefinitions.forEach { (columnIndex,width) in
+            self.columns[columnIndex].updateShowingModeWidth(width)
+        }
     }
     
     private func setupAllColumns(){
         if self.columns.count > 0 {
-            self.setColumnsEdgesConstraints()
-            self.setColumnsWidthConstraints()
+            self.createAndSetColumnsEdgesConstraints()
+            self.createAndSetColumnsWidthConstraints()
         }
     }
     
     private func redistributeSpaceToShowingColumns(spaceToRedistribute space: CGFloat){
         
+    }
+    
+    private func setColumnFields(_ columns: [ColumnFieldContent]) {
+        self.deactivateAllConstraints()
+        self.columns = columns.map({return ColumnContentView(withField: $0)})
+        let red = UIColor.red
+        let purple = UIColor.clear
+        var color = red
+        self.columns.forEach { c in
+            color = color == purple ? red : purple
+            c.backgroundColor = color
+            self.addSubview(c)
+        }
+        self.setupAllColumns()
     }
     
     func hideColumns(_ columns: [Int]) {
@@ -135,14 +169,28 @@ class ColumnsViewContainer: UIView {
         
     }
     
-    func setColumnFields(_ columns: [UIView]) {
-        self.deactivateAllConstraints()
-        self.columns = columns.map({return ColumnContentView(withField: $0)})
-        self.setupAllColumns()
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        self.setColumnFields(self.delegate.columnsFields)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         self.updateColumnsWidthConstraints()
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.verticalSizeClass == .compact &&
+            previousTraitCollection?.horizontalSizeClass == .compact &&
+            self.traitCollection.verticalSizeClass == .regular,
+            let constraint = self.mainColumn?.widthConstraint {
+                NSLayoutConstraint.deactivate([constraint])
+        }else{
+            if let constraint = self.mainColumn?.widthConstraint {
+                NSLayoutConstraint.activateIfNotActive([constraint])
+            }
+        }
+    }
+
 }

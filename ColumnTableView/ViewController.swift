@@ -16,11 +16,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(ColumnsTableViewCell.self, forCellReuseIdentifier: "PrototypeCell")
+        self.tableView.register(SpecialColumnsTableViewCell.self, forCellReuseIdentifier: "PrototypeCell")
         self.tableView.delegate = self
         self.tableView.dataSource = self
     }
 
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 30

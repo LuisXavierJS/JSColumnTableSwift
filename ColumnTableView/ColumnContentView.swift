@@ -8,14 +8,29 @@
 
 import UIKit
 
+class ColumnFieldContent: NSObject {
+    weak var field: UIView!
+    var title: String
+    var preferredSize: CGSize?
+    var redimensioningPriority: CGFloat?
+    
+    init(_ field: UIView, title: String){
+        self.field = field
+        self.title = title
+        super.init()
+    }
+}
+
 class ColumnContentView: UIView {
-    private(set) var fieldContent: UIView!
+    private(set) var fieldContent: ColumnFieldContent!
     
-    private var widthConstraint: NSLayoutConstraint!
+    private(set) var isShowing: Bool = true
     
-    var showingModeWidth: CGFloat = 0
+    private(set) var widthConstraint: NSLayoutConstraint!
     
-    init(withField field: UIView){
+    private(set) var showingModeWidth: CGFloat = 0
+    
+    init(withField field: ColumnFieldContent){
         self.fieldContent = field
         super.init(frame: CGRect.zero)
         self.setupViews()
@@ -27,7 +42,7 @@ class ColumnContentView: UIView {
     }
     
     private func setupViews(){
-        
+        self.translatesAutoresizingMaskIntoConstraints = false
     }
  
     func setWidth(constraint: NSLayoutConstraint){
@@ -35,14 +50,24 @@ class ColumnContentView: UIView {
             NSLayoutConstraint.deactivate([actualWidthConstraint])
         }
         self.widthConstraint = constraint
+        self.widthConstraint.identifier = self.fieldContent.title
         self.showingModeWidth = self.widthConstraint.constant
     }
     
+    func updateShowingModeWidth(_ width: CGFloat){
+        self.showingModeWidth = width
+        if self.isShowing {
+            self.widthConstraint.constant = self.showingModeWidth
+        }
+    }
+    
     func show(){
+        self.isShowing = true
         self.widthConstraint.constant = self.showingModeWidth
     }
     
     func hide(){
+        self.isShowing = false
         self.widthConstraint.constant = 0
     }
 }

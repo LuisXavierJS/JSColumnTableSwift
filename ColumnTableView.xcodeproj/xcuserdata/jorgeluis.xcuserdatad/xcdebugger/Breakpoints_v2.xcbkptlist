@@ -6,16 +6,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ColumnTableView/ColumnsViewContainer.swift"
-            timestampString = "523560238.302412"
+            timestampString = "523576122.422929"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "setupAllColumns()"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "getWidthDefinitionsOfColumns()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

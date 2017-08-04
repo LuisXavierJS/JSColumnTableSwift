@@ -8,37 +8,7 @@
 
 import UIKit
 
-class ColumnsHeaderView: UITableViewHeaderFooterView {
+class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView {
     
-    let containerView: ColumnsViewContainer = ColumnsViewContainer()
-    
-    fileprivate lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
-        return self.createContainerConstraintsToActivateOnSetup()
-    }()
-    
-    func setupViews(){
-        self.containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addSubview(containerView)
-        
-        NSLayoutConstraint.activateIfNotActive(self.containerConstraintsToActivateOnSetup)
-    }
-    
-    func createContainerConstraintsToActivateOnSetup() -> [NSLayoutConstraint] {
-        var containerConstraints: [NSLayoutConstraint] = []
-        containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", metrics: nil, views: ["container":self.containerView]))
-        containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", metrics: nil, views: ["container":self.containerView]))
-        return containerConstraints
-    }
-    
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        self.setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setupViews()
-    }
 
 }
