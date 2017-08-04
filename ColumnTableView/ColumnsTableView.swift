@@ -9,7 +9,20 @@
 import UIKit
 
 class ColumnsTableView: UITableView {
-
+    
+    private func setupViews(){
+        
+    }
+    
+    override init(frame: CGRect, style: UITableViewStyle) {
+        super.init(frame: frame, style: style)
+        self.setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setupViews()
+    }
     
 
 }

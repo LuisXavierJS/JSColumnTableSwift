@@ -21,10 +21,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.tableView.dataSource = self
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return colors.count
