@@ -14,6 +14,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.register(ColumnsTableViewCell.self, forCellReuseIdentifier: "PrototypeCell")
         self.tableView.delegate = self
         self.tableView.dataSource = self
     }
@@ -29,8 +30,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PrototypeCell", for: indexPath)
+        cell.selectionStyle = .none
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("SELECTED!")
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
 
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        return [UITableViewRowAction(style: .destructive, title: "DELETE", handler: { (_, _) in
+            print("ACTION!")
+        })]
+    }
 }
 
