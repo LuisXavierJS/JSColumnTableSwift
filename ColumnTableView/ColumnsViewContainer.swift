@@ -150,12 +150,7 @@ class ColumnsViewContainer: UIView {
     private func setColumnFields(_ columns: [ColumnFieldContent]) {
         self.deactivateAllConstraints()
         self.columns = columns.map({return ColumnContentView(withField: $0)})
-        let red = UIColor.red
-        let purple = UIColor.clear
-        var color = red
         self.columns.forEach { c in
-            color = color == purple ? red : purple
-            c.backgroundColor = color
             self.addSubview(c)
         }
         self.setupAllColumns()

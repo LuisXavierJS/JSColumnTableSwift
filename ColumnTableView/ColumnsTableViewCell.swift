@@ -24,9 +24,17 @@ class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController {
         
         self.containerView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.contentView.addSubview(containerView)
+        self.setContainerConstraints()
+    }
+    
+    private func setContainerConstraints(){
+        let needsSetConstraints = self.reuseIdentifier != nil
         
-        NSLayoutConstraint.activateIfNotActive(self.containerConstraintsToActivateOnSetup)
+        if needsSetConstraints{
+            self.contentView.addSubview(self.containerView)
+            
+            NSLayoutConstraint.activateIfNotActive(self.containerConstraintsToActivateOnSetup)
+        }
     }
     
     func createContainerConstraintsToActivateOnSetup() -> [NSLayoutConstraint] {
@@ -35,6 +43,7 @@ class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController {
         containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", metrics: nil, views: ["container":self.containerView]))
         return containerConstraints
     }
+    
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
