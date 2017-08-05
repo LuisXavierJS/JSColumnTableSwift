@@ -18,6 +18,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         self.tableView.register(SpecialColumnsTableViewCell.self, forCellReuseIdentifier: "PrototypeCell")
         self.tableView.register(ColumnsHeaderView<SpecialColumnsTableViewCell>.self, forHeaderFooterViewReuseIdentifier: "PrototypeHeader")
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 50
         self.tableView.delegate = self
         self.tableView.dataSource = self
     }

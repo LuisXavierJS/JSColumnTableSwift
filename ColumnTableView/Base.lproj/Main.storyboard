@@ -34,21 +34,21 @@
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" misplaced="YES" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="UAf-N5-cdV" customClass="ColumnsTableView" customModule="ColumnTableView" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
+                                <rect key="frame" x="100" y="100" width="214" height="472"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="UAf-N5-cdV" secondAttribute="bottom" id="3r9-7n-jDQ"/>
-                            <constraint firstItem="UAf-N5-cdV" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="4cK-Gu-oKL"/>
-                            <constraint firstAttribute="trailing" secondItem="UAf-N5-cdV" secondAttribute="trailing" id="4rM-8r-2jf"/>
-                            <constraint firstItem="UAf-N5-cdV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="qAF-Ps-uAs"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="UAf-N5-cdV" secondAttribute="bottom" constant="100" id="3r9-7n-jDQ"/>
+                            <constraint firstItem="UAf-N5-cdV" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="100" id="4cK-Gu-oKL"/>
+                            <constraint firstAttribute="trailing" secondItem="UAf-N5-cdV" secondAttribute="trailing" constant="100" id="4rM-8r-2jf"/>
+                            <constraint firstItem="UAf-N5-cdV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="100" id="qAF-Ps-uAs"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="TableView" id="qLo-GJ-p24">
@@ -75,7 +75,7 @@
                         <viewControllerLayoutGuide type="top" id="3OA-cZ-caR"/>
                         <viewControllerLayoutGuide type="bottom" id="0ww-Ae-6pH"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" misplaced="YES" id="beX-al-8e4">
+                    <view key="view" contentMode="scaleToFill" id="beX-al-8e4">
                         <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

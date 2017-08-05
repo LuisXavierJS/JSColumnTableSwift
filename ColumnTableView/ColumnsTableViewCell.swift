@@ -24,10 +24,11 @@ class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController {
         
         self.containerView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.setContainerConstraints()
+        self.setContainerConstraintsIfNeeded()
     }
     
-    private func setContainerConstraints(){
+    private func setContainerConstraintsIfNeeded(){
+        //So sera preciso setar constraint se a cell for instanciada a partir do dequeue de uma tabela (ou seja: com reuse nil)
         let needsSetConstraints = self.reuseIdentifier != nil
         
         if needsSetConstraints{
@@ -43,7 +44,6 @@ class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController {
         containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", metrics: nil, views: ["container":self.containerView]))
         return containerConstraints
     }
-    
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -77,4 +77,5 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
     func preferredRelativeWidthForColumn(at index: Int) -> CGFloat {
         return columnSizes[index]
     }
+    
 }

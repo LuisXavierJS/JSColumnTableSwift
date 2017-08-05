@@ -78,8 +78,8 @@ class ColumnContentView: UIView {
     
     private func setupConstraints(){
         var constraintsToActivate: [NSLayoutConstraint] = []
-        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-(s)-[view(l)]", metrics: ["s":-1,"l":2], views: ["view":self.leftSeparator]))
-        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l)]-(s)-|", metrics: ["s":-1,"l":2], views: ["view":self.rightSeparator]))
+        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-(s)-[view(l)]", metrics: ["s":-0.5,"l":0.5], views: ["view":self.leftSeparator]))
+        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l)]-(s)-|", metrics: ["s":-0.5,"l":0.5], views: ["view":self.rightSeparator]))
         constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", metrics: nil, views: ["view":self.leftSeparator]))
         constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", metrics: nil, views: ["view":self.rightSeparator]))
         constraintsToActivate.append(contentsOf: [self.fieldContent.field.centerXAnchor.constraint(equalTo: self.centerXAnchor),
@@ -108,6 +108,8 @@ class ColumnContentView: UIView {
         NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }
  
+    
+    
     func setWidth(constraint: NSLayoutConstraint){
         if let actualWidthConstraint = self.widthConstraint{
             NSLayoutConstraint.deactivate([actualWidthConstraint])
@@ -134,5 +136,9 @@ class ColumnContentView: UIView {
         self.isShowing = false
         self.clipsToBounds = true
         self.widthConstraint.constant = 0
+    }
+    
+    func setHeaderMode(_ on: Bool){
+        
     }
 }
