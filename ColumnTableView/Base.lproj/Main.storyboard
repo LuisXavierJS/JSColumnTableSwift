@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -79,43 +78,7 @@
                     <view key="view" contentMode="scaleToFill" misplaced="YES" id="beX-al-8e4">
                         <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ETT-Jx-xIa">
-                                <rect key="frame" x="20" y="278" width="168" height="117"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="117" id="qFU-uV-XKs"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y5D-IB-BMh">
-                                <rect key="frame" x="290" y="275" width="104" height="122"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="104" id="HT1-0B-6Xr"/>
-                                    <constraint firstAttribute="height" constant="122" id="Q1z-Jv-A6v"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tah-Hj-eha">
-                                <rect key="frame" x="188" y="280" width="102" height="113"/>
-                                <color key="backgroundColor" red="0.92549020049999997" green="0.23529411850000001" blue="0.1019607857" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="113" id="IOL-aH-gQv"/>
-                                    <constraint firstAttribute="width" constant="102" id="w2N-9g-oKP"/>
-                                </constraints>
-                            </view>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="Tah-Hj-eha" firstAttribute="leading" secondItem="ETT-Jx-xIa" secondAttribute="trailing" id="DEJ-JM-B0q"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Y5D-IB-BMh" secondAttribute="trailing" id="GKm-r2-WFU"/>
-                            <constraint firstItem="Tah-Hj-eha" firstAttribute="centerY" secondItem="beX-al-8e4" secondAttribute="centerY" id="Q2t-uo-j7t"/>
-                            <constraint firstItem="ETT-Jx-xIa" firstAttribute="leading" secondItem="beX-al-8e4" secondAttribute="leadingMargin" id="cck-Df-8u2"/>
-                            <constraint firstItem="Y5D-IB-BMh" firstAttribute="leading" secondItem="Tah-Hj-eha" secondAttribute="trailing" id="dsc-QN-RUz"/>
-                            <constraint firstItem="Y5D-IB-BMh" firstAttribute="centerY" secondItem="beX-al-8e4" secondAttribute="centerY" id="xzh-Mk-Bc8"/>
-                            <constraint firstItem="ETT-Jx-xIa" firstAttribute="centerY" secondItem="beX-al-8e4" secondAttribute="centerY" id="z3b-YH-ctj">
-                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
-                            </constraint>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="PuH-lS-yO2"/>
                 </viewController>

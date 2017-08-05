@@ -65,11 +65,11 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
     let imagem = UIImageView()
     
     override var columnsFields: [ColumnFieldContent] {
-        return [ColumnFieldContent(atualizar,title: "atualizar"),
-                ColumnFieldContent(nome, title: "nome"),
-                ColumnFieldContent(novoNome,title: "novoNome"),
-                ColumnFieldContent(executar,title: "executar"),
-                ColumnFieldContent(imagem,title:"imagem")]
+        return [ColumnFieldContent(atualizar,title: "atualizar", header: .title),
+                ColumnFieldContent(nome, title: "nome", header: .title),
+                ColumnFieldContent(novoNome,title: "novoNome", header: .title),
+                ColumnFieldContent(executar,title: "executar", header: .title),
+                ColumnFieldContent(imagem,title:"imagem", header: .title)]
     }
     
 }

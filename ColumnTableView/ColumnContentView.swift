@@ -8,15 +8,22 @@
 
 import UIKit
 
+enum ColumnFieldHeaderMode {
+    case title
+    case none
+    case field
+}
+
 class ColumnFieldContent: NSObject {
     weak var field: UIView!
     var title: String
+    var headerMode: ColumnFieldHeaderMode
     var preferredSize: CGSize?
-    var redimensioningPriority: CGFloat?
     
-    init(_ field: UIView, title: String){
+    init(_ field: UIView, title: String, header: ColumnFieldHeaderMode){
         self.field = field
         self.title = title
+        self.headerMode = header
         super.init()
     }
 }
@@ -29,6 +36,10 @@ class ColumnContentView: UIView {
     private(set) var widthConstraint: NSLayoutConstraint!
     
     private(set) var showingModeWidth: CGFloat = 0
+    
+    private(set) weak var rightSeparator: UIView!
+    
+    private(set) weak var leftSeparator: UIView!
     
     init(withField field: ColumnFieldContent){
         self.fieldContent = field
@@ -43,6 +54,55 @@ class ColumnContentView: UIView {
     
     private func setupViews(){
         self.translatesAutoresizingMaskIntoConstraints = false
+        self.clipsToBounds = false
+        self.fieldContent.field.translatesAutoresizingMaskIntoConstraints = false
+        let rightLine = UIView()
+        let leftLine = UIView()
+        
+        rightLine.translatesAutoresizingMaskIntoConstraints = false
+        leftLine.translatesAutoresizingMaskIntoConstraints = false
+        rightLine.backgroundColor = UIColor.black
+        leftLine.backgroundColor = UIColor.black
+        self.fieldContent.field.backgroundColor = UIColor.blue
+        
+        self.addSubview(rightLine)
+        self.addSubview(leftLine)
+        self.addSubview(self.fieldContent.field)
+        
+        self.rightSeparator = rightLine
+        self.leftSeparator = leftLine
+        
+        self.setupConstraints()
+    }
+    
+    private func setupConstraints(){
+        var constraintsToActivate: [NSLayoutConstraint] = []
+        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-(s)-[view(l)]", metrics: ["s":-1,"l":2], views: ["view":self.leftSeparator]))
+        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l)]-(s)-|", metrics: ["s":-1,"l":2], views: ["view":self.rightSeparator]))
+        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", metrics: nil, views: ["view":self.leftSeparator]))
+        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", metrics: nil, views: ["view":self.rightSeparator]))
+        constraintsToActivate.append(contentsOf: [self.fieldContent.field.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+                                                  self.fieldContent.field.centerYAnchor.constraint(equalTo: self.centerYAnchor)])
+        if let size = self.fieldContent.preferredSize {
+            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l)]", metrics: ["l":size.width], views: ["view":self.fieldContent.field]))
+            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:[view(a)]", metrics: ["a":size.height], views: ["view":self.fieldContent.field]))
+        }else{
+            constraintsToActivate.append(NSLayoutConstraint(item: self.fieldContent.field,
+                                                            attribute: .width,
+                                                            relatedBy: .equal,
+                                                            toItem: self,
+                                                            attribute: .width,
+                                                            multiplier: 0.9,
+                                                            constant: 0))
+            constraintsToActivate.append(NSLayoutConstraint(item: self.fieldContent.field,
+                                                            attribute: .height,
+                                                            relatedBy: .equal,
+                                                            toItem: self,
+                                                            attribute: .height,
+                                                            multiplier: 0.9,
+                                                            constant: 0))
+        }
+        NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }
  
     func setWidth(constraint: NSLayoutConstraint){
@@ -63,11 +123,13 @@ class ColumnContentView: UIView {
     
     func show(){
         self.isShowing = true
+        self.clipsToBounds = false
         self.widthConstraint.constant = self.showingModeWidth
     }
     
     func hide(){
         self.isShowing = false
+        self.clipsToBounds = true
         self.widthConstraint.constant = 0
     }
 }
