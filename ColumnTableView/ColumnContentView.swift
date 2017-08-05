@@ -18,14 +18,16 @@ class ColumnFieldContent: NSObject {
     weak var field: UIView!
     var title: String
     var headerMode: ColumnFieldHeaderMode
-    var preferredSize: CGSize?
+    var preferredSizeOfField: CGSize?
     
-    init(_ field: UIView, title: String, header: ColumnFieldHeaderMode){
+    init(_ field: UIView, title: String, header: ColumnFieldHeaderMode,_ preferredSize: CGSize? = nil){
         self.field = field
         self.title = title
         self.headerMode = header
+        self.preferredSizeOfField = preferredSize
         super.init()
     }
+
 }
 
 class ColumnContentView: UIView {
@@ -63,7 +65,6 @@ class ColumnContentView: UIView {
         leftLine.translatesAutoresizingMaskIntoConstraints = false
         rightLine.backgroundColor = UIColor.black
         leftLine.backgroundColor = UIColor.black
-        self.fieldContent.field.backgroundColor = UIColor.blue
         
         self.addSubview(rightLine)
         self.addSubview(leftLine)
@@ -83,9 +84,11 @@ class ColumnContentView: UIView {
         constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", metrics: nil, views: ["view":self.rightSeparator]))
         constraintsToActivate.append(contentsOf: [self.fieldContent.field.centerXAnchor.constraint(equalTo: self.centerXAnchor),
                                                   self.fieldContent.field.centerYAnchor.constraint(equalTo: self.centerYAnchor)])
-        if let size = self.fieldContent.preferredSize {
-            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l)]", metrics: ["l":size.width], views: ["view":self.fieldContent.field]))
-            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:[view(a)]", metrics: ["a":size.height], views: ["view":self.fieldContent.field]))
+        if let size = self.fieldContent.preferredSizeOfField {
+            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l@750)]", metrics: ["l":size.width], views: ["view":self.fieldContent.field]))
+            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:[view(a@750)]", metrics: ["a":size.height], views: ["view":self.fieldContent.field]))
+            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(<=s@1000)]", metrics: nil, views: ["view":self.fieldContent.field,"s":self]))
+            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:[view(<=s@1000)]", metrics: nil, views: ["view":self.fieldContent.field,"s":self]))
         }else{
             constraintsToActivate.append(NSLayoutConstraint(item: self.fieldContent.field,
                                                             attribute: .width,

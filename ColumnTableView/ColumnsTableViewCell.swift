@@ -65,11 +65,16 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
     let imagem = UIImageView()
     
     override var columnsFields: [ColumnFieldContent] {
-        return [ColumnFieldContent(atualizar,title: "atualizar", header: .title),
+        return [ColumnFieldContent(atualizar,title: "atualizar", header: .title, CGSize(width:50,height:30)),
                 ColumnFieldContent(nome, title: "nome", header: .title),
                 ColumnFieldContent(novoNome,title: "novoNome", header: .title),
                 ColumnFieldContent(executar,title: "executar", header: .title),
                 ColumnFieldContent(imagem,title:"imagem", header: .title)]
     }
+
+    var columnSizes: [CGFloat] = [0.1,0.3,0.2,0.3,0.1]
     
+    func preferredRelativeWidthForColumn(at index: Int) -> CGFloat {
+        return columnSizes[index]
+    }
 }
