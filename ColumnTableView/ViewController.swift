@@ -48,12 +48,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PrototypeCell", for: indexPath) as! SpecialColumnsTableViewCell
         cell.containerView.backgroundColor = colors[indexPath.section][indexPath.row]
-        if indexPath.row == 3 {
-            cell.nome.numberOfLines = 0
-            cell.nome.lineBreakMode = .byWordWrapping
-            cell.nome.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-            cell.nome.backgroundColor = UIColor.lightGray
-        }
         cell.selectionStyle = .none
         return cell
     }

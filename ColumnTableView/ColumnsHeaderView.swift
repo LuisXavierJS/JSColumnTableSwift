@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView {
+class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnHeaderControllerDelegate {
     private var columnsViewContainerCell: T = T()
     
     weak var columnsViewContainer: ColumnsViewContainer! {
@@ -26,13 +26,15 @@ class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView {
     }
 
     private func setupViews(){
-         self.columnsViewContainerCell.setupViews()
+        self.columnsViewContainerCell.setupViews()
+        self.columnsViewContainer.headerDelegate = self
         self.columnsViewContainer.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.columnsViewContainer)
         var containerConstraints: [NSLayoutConstraint] = []
         containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", metrics: nil, views: ["container":self.columnsViewContainer]))
         containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", metrics: nil, views: ["container":self.columnsViewContainer]))
         NSLayoutConstraint.activateIfNotActive(containerConstraints)
+        self.columnsViewContainer.setHeaderMode(true)
     }
     
     override func layoutSubviews() {

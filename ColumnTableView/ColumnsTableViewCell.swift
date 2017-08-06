@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController {
+class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDelegate {
     let containerView: ColumnsViewContainer = ColumnsViewContainer()
     
     private lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
@@ -65,11 +65,11 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
     let imagem = UIImageView()
     
     override var columnsFields: [ColumnFieldContent] {
-        return [ColumnFieldContent(atualizar,title: "atualizar", header: .title, CGSize(width:50,height:30)),
-                ColumnFieldContent(nome, title: "nome", header: .title),
-                ColumnFieldContent(novoNome,title: "novoNome", header: .title),
-                ColumnFieldContent(executar,title: "executar", header: .title),
-                ColumnFieldContent(imagem,title:"imagem", header: .title)]
+        return [ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
+                ColumnFieldContent(nome, title: "nome"),
+                ColumnFieldContent(novoNome,title: "novoNome"),
+                ColumnFieldContent(executar,title: "executar"),
+                ColumnFieldContent(imagem,title:"imagem")]
     }
 
     var columnSizes: [CGFloat] = [0.1,0.3,0.2,0.3,0.1]

@@ -8,22 +8,20 @@
 
 import UIKit
 
-enum ColumnFieldHeaderMode {
-    case title
-    case none
-    case field
+@objc enum ColumnFieldHeaderMode: Int{
+    case title = 1
+    case none = 0
+    case field = 2
 }
 
 class ColumnFieldContent: NSObject {
     weak var field: UIView!
     let title: String
-    let headerMode: ColumnFieldHeaderMode
     let preferredSizeOfField: CGSize?
     
-    init(_ field: UIView, title: String, header: ColumnFieldHeaderMode,_ preferredSize: CGSize? = nil){
+    init(_ field: UIView, title: String,_ preferredSize: CGSize? = nil){
         self.field = field
         self.title = title
-        self.headerMode = header
         self.preferredSizeOfField = preferredSize
         super.init()
     }
@@ -44,6 +42,26 @@ class ColumnContentView: UIView {
     private(set) weak var leftSeparator: UIView!
     
     private(set) var headerTitle: UILabel?
+    
+    private(set) var headerMode: ColumnFieldHeaderMode = .title
+    
+    var fontOfHeaderTitle: UIFont? {
+        didSet{
+            self.updateHeaderTitleFont()
+        }
+    }
+    
+    private lazy var headerTitleConstraints: [NSLayoutConstraint] = {
+        return [self.headerTitle!.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+                self.headerTitle!.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+                NSLayoutConstraint(item: self.headerTitle!,
+                                   attribute: .width,
+                                   relatedBy: .equal,
+                                   toItem: self,
+                                   attribute: .width,
+                                   multiplier: 0.9,
+                                   constant: 0)]
+    }()
     
     init(withField field: ColumnFieldContent){
         self.fieldContent = field
@@ -82,8 +100,8 @@ class ColumnContentView: UIView {
         var constraintsToActivate: [NSLayoutConstraint] = []
         constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-(s)-[view(l)]", metrics: ["s":-0.5,"l":0.5], views: ["view":self.leftSeparator]))
         constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l)]-(s)-|", metrics: ["s":-0.5,"l":0.5], views: ["view":self.rightSeparator]))
-        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", metrics: nil, views: ["view":self.leftSeparator]))
-        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", metrics: nil, views: ["view":self.rightSeparator]))
+        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-(s)-[view]-(s)-|", metrics: ["s":0], views: ["view":self.leftSeparator]))
+        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-(s)-[view]-(s)-|", metrics: ["s":0], views: ["view":self.rightSeparator]))
         constraintsToActivate.append(contentsOf: [self.fieldContent.field.centerXAnchor.constraint(equalTo: self.centerXAnchor),
                                                   self.fieldContent.field.centerYAnchor.constraint(equalTo: self.centerYAnchor)])
         if let size = self.fieldContent.preferredSizeOfField {
@@ -113,10 +131,16 @@ class ColumnContentView: UIView {
     private func createHeaderTitle(){
         let label = UILabel()
         self.headerTitle = label
+        self.headerTitle?.translatesAutoresizingMaskIntoConstraints = false
+        self.headerTitle?.adjustsFontSizeToFitWidth = true
         self.headerTitle?.text = self.fieldContent.title
-        NSLayoutConstraint.activateIfNotActive([self.headerTitle!.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                                                self.headerTitle!.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-                                                self.headerTitle!.widthAnchor.constraint(equalTo: self.widthAnchor)])
+        self.updateHeaderTitleFont()
+    }
+    
+    private func updateHeaderTitleFont(){
+        if let font = self.fontOfHeaderTitle {
+            self.headerTitle?.font = font
+        }
     }
     
     private func setFieldVisibility(showing: Bool){
@@ -126,11 +150,11 @@ class ColumnContentView: UIView {
     }
     
     private func showHeader(){
-        switch self.fieldContent.headerMode {
+        switch self.headerMode {
         case .title:
             if let headerTitle = self.headerTitle{
                 self.addSubview(headerTitle)
-                headerTitle.constraints.forEach({$0.isActive = true})
+                NSLayoutConstraint.activateIfNotActive(self.headerTitleConstraints)
             }else{
                 self.setFieldVisibility(showing: false)
                 self.createHeaderTitle()
@@ -148,7 +172,7 @@ class ColumnContentView: UIView {
     
     private func hideHeader(){
         if let headerTitle = self.headerTitle{
-            headerTitle.constraints.forEach({$0.isActive = false})
+            NSLayoutConstraint.deactivate(self.headerTitleConstraints)
             headerTitle.removeFromSuperview()
         }else{
             self.setFieldVisibility(showing: true)
@@ -183,7 +207,9 @@ class ColumnContentView: UIView {
         self.widthConstraint.constant = 0
     }
     
-    func setHeaderMode(_ on: Bool){
+    func setHeaderMode(_ on: Bool, _ mode: ColumnFieldHeaderMode?, _ font: UIFont? = nil){
+        self.fontOfHeaderTitle = font
+        self.headerMode = mode ?? .title
         if on {
             self.showHeader()
         }else{

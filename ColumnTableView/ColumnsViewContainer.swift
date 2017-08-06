@@ -9,7 +9,7 @@
 import UIKit
 
 
-@objc protocol ColumnsViewContainerController: class {
+@objc protocol ColumnsViewContainerControllerDelegate: class {
     var columnsFields: [ColumnFieldContent] {get}
     
 //  Informa coluna que preferencialmente tera seu tamanho variavel conforme a variacao de tamanho da superview e das demais colunas
@@ -24,18 +24,26 @@ import UIKit
 //  Informa a preferencia de largura inicial para uma coluna durante o layout:
 // -  Se nao for implementado, a preferencia de largura inicial sera igual para todas as colunas.
 // -  Se for implementado mas retornar valores que nao representem o real tamanho da ColumnsViewCell, as colunas finais podem desaparecer ou a mainColumn pode aumentar para compensar a diferenca de tamanho.
-    @objc optional func preferredInitialFixedWidthForColumn(at index: Int) -> CGFloat
+    @objc optional func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat
     
 //  Informa a preferencia de largura inicial para uma coluna durante o layout:
 // -  Se nao for implementado, a preferencia de largura inicial sera igual para todas as colunas.
 // -  Se for implementado mas retornar valores que nao representem o real tamanho da ColumnsViewCell, as colunas finais podem desaparecer ou a mainColumn pode aumentar para compensar a diferenca de tamanho.
-    @objc optional func preferredRelativeWidthForColumn(at index: Int) -> CGFloat
+    @objc optional func preferredRelativeWidth(forColumnAt index: Int) -> CGFloat
+}
+
+@objc protocol ColumnHeaderControllerDelegate: class {
+    @objc optional func fontForHeader(forColumnAt index: Int) -> UIFont
+    @objc optional func headerMode(forColumnAt index: Int) -> ColumnFieldHeaderMode
 }
 
 class ColumnsViewContainer: UIView {
     private(set) var columns: [ColumnContentView] = []
     weak var mainColumn: ColumnContentView?
-    weak var delegate: ColumnsViewContainerController!
+    weak var delegate: ColumnsViewContainerControllerDelegate!
+    weak var headerDelegate: ColumnHeaderControllerDelegate?
+    var normalModeBackgroundColor: UIColor = UIColor.clear
+    var headerModeBackgroundColor: UIColor = UIColor.lightGray
     
     convenience init(){
         self.init(frame: CGRect.zero)
@@ -57,7 +65,7 @@ class ColumnsViewContainer: UIView {
 
     }
     
-    private func deactivateAllConstraints(){
+    private func deactivateCurrentAllColumnsAndConstraints(){
         self.columns.forEach { (c) in
             NSLayoutConstraint.deactivate(c.constraints)
             c.removeFromSuperview()
@@ -102,10 +110,10 @@ class ColumnsViewContainer: UIView {
         self.columns.forEach { _ in
             var preferredWidth: CGFloat = 0
             var width: CGFloat = 0
-            if let preferredRelativeWidth = self.delegate?.preferredRelativeWidthForColumn?(at: index){
+            if let preferredRelativeWidth = self.delegate?.preferredRelativeWidth?(forColumnAt: index){
                 preferredWidth = preferredRelativeWidth * self.bounds.width
             }else{
-                preferredWidth = self.delegate?.preferredInitialFixedWidthForColumn?(at: index) ?? self.bounds.width/CGFloat(self.columns.count)
+                preferredWidth = self.delegate?.preferredInitialFixedWidth?(forColumnAt: index) ?? self.bounds.width/CGFloat(self.columns.count)
             }
             width = min(preferredWidth, max(self.bounds.width - totalColumnsWidth,0))
             widthDefinitions.append((column: index, width: width, preferredWidth: preferredWidth))
@@ -144,6 +152,7 @@ class ColumnsViewContainer: UIView {
     
     private func setupAllColumns(){
         if self.columns.count > 0 {
+            self.columns.forEach({self.addSubview($0)})
             self.createAndSetColumnsEdgesConstraints()
             self.createAndSetColumnsWidthConstraints()
         }
@@ -154,20 +163,29 @@ class ColumnsViewContainer: UIView {
     }
     
     private func setColumnFields(_ columns: [ColumnFieldContent]) {
-        self.deactivateAllConstraints()
+        self.deactivateCurrentAllColumnsAndConstraints()
         self.columns = columns.map({return ColumnContentView(withField: $0)})
-        self.columns.forEach { c in
-            self.addSubview(c)
-        }
         self.setupAllColumns()
     }
     
     func hideColumns(_ columns: [Int]) {
-        
+        self.columns.filter({!$0.isShowing}).forEach({$0.show()})
+        columns.forEach({self.columns[$0].hide()})
     }
     
     func showColumns(_ columns: [Int]) {
-        
+        columns.forEach({self.columns[$0].show()})
+    }
+    
+    func setHeaderMode(_ on: Bool){
+        self.backgroundColor = on ? self.headerModeBackgroundColor : self.normalModeBackgroundColor
+        var index: Int = 0
+        self.columns.forEach({
+            let headerMode = self.headerDelegate?.headerMode?(forColumnAt: index)
+            let font = self.headerDelegate?.fontForHeader?(forColumnAt: index)
+            $0.setHeaderMode(on,headerMode,font)
+            index+=1
+        })
     }
     
     override func didMoveToSuperview() {
