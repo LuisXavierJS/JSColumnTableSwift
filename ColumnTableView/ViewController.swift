@@ -19,7 +19,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.tableView.register(SpecialColumnsTableViewCell.self, forCellReuseIdentifier: "PrototypeCell")
         self.tableView.register(ColumnsHeaderView<SpecialColumnsTableViewCell>.self, forHeaderFooterViewReuseIdentifier: "PrototypeHeader")
         self.tableView.rowHeight = UITableViewAutomaticDimension
-        self.tableView.estimatedRowHeight = 50
+        self.tableView.estimatedRowHeight = 90
         self.tableView.delegate = self
         self.tableView.dataSource = self
     }
@@ -46,14 +46,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PrototypeCell", for: indexPath) as! ColumnsTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PrototypeCell", for: indexPath) as! SpecialColumnsTableViewCell
         cell.containerView.backgroundColor = colors[indexPath.section][indexPath.row]
+        if indexPath.row == 3 {
+            cell.nome.numberOfLines = 0
+            cell.nome.lineBreakMode = .byWordWrapping
+            cell.nome.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+            cell.nome.backgroundColor = UIColor.lightGray
+        }
         cell.selectionStyle = .none
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("SELECTED!")
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

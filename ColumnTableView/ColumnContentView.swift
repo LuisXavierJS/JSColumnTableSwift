@@ -16,9 +16,9 @@ enum ColumnFieldHeaderMode {
 
 class ColumnFieldContent: NSObject {
     weak var field: UIView!
-    var title: String
-    var headerMode: ColumnFieldHeaderMode
-    var preferredSizeOfField: CGSize?
+    let title: String
+    let headerMode: ColumnFieldHeaderMode
+    let preferredSizeOfField: CGSize?
     
     init(_ field: UIView, title: String, header: ColumnFieldHeaderMode,_ preferredSize: CGSize? = nil){
         self.field = field
@@ -42,6 +42,8 @@ class ColumnContentView: UIView {
     private(set) weak var rightSeparator: UIView!
     
     private(set) weak var leftSeparator: UIView!
+    
+    private(set) var headerTitle: UILabel?
     
     init(withField field: ColumnFieldContent){
         self.fieldContent = field
@@ -108,7 +110,50 @@ class ColumnContentView: UIView {
         NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }
  
+    private func createHeaderTitle(){
+        let label = UILabel()
+        self.headerTitle = label
+        self.headerTitle?.text = self.fieldContent.title
+        NSLayoutConstraint.activateIfNotActive([self.headerTitle!.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+                                                self.headerTitle!.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+                                                self.headerTitle!.widthAnchor.constraint(equalTo: self.widthAnchor)])
+    }
     
+    private func setFieldVisibility(showing: Bool){
+        self.fieldContent.field.isUserInteractionEnabled = showing
+        self.fieldContent.field.isOpaque = showing
+        self.fieldContent.field.isHidden = !showing
+    }
+    
+    private func showHeader(){
+        switch self.fieldContent.headerMode {
+        case .title:
+            if let headerTitle = self.headerTitle{
+                self.addSubview(headerTitle)
+                headerTitle.constraints.forEach({$0.isActive = true})
+            }else{
+                self.setFieldVisibility(showing: false)
+                self.createHeaderTitle()
+                self.showHeader()
+            }
+            break
+        case .none:
+            self.setFieldVisibility(showing: false)
+            break
+        case .field:
+            self.setFieldVisibility(showing: true)
+            break
+        }
+    }
+    
+    private func hideHeader(){
+        if let headerTitle = self.headerTitle{
+            headerTitle.constraints.forEach({$0.isActive = false})
+            headerTitle.removeFromSuperview()
+        }else{
+            self.setFieldVisibility(showing: true)
+        }
+    }
     
     func setWidth(constraint: NSLayoutConstraint){
         if let actualWidthConstraint = self.widthConstraint{
@@ -139,6 +184,10 @@ class ColumnContentView: UIView {
     }
     
     func setHeaderMode(_ on: Bool){
-        
+        if on {
+            self.showHeader()
+        }else{
+            self.hideHeader()
+        }
     }
 }
