@@ -78,17 +78,5 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
                 ColumnFieldContent(executar,title: "executar"),
                 ColumnFieldContent(imagem,title:"imagem")]
     }
-
-    var columnSizes: [CGFloat] = [0.1,0.3,0.2,0.3,0.1]
-    
-    var columnResizePriorities: [CGFloat] = [0.1,0.1,0.1,0.1,0.1]
-    
-    func preferredRelativeWidthForColumn(at index: Int) -> CGFloat {
-        return columnSizes[index]
-    }
-    
-    func redimensioningPriority(forColumnAt index: Int) -> CGFloat {
-        return columnResizePriorities[index]
-    }
     
 }
