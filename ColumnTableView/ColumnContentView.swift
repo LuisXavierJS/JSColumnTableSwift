@@ -198,12 +198,14 @@ class ColumnContentView: UIView {
     func show(){
         self.isShowing = true
         self.clipsToBounds = false
+        self.alpha = 1
         self.widthConstraint.constant = self.showingModeWidth
     }
     
     func hide(){
         self.isShowing = false
         self.clipsToBounds = true
+        self.alpha = 0
         self.widthConstraint.constant = 0
     }
     

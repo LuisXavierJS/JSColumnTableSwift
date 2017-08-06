@@ -33,15 +33,31 @@ import UIKit
 }
 
 @objc protocol ColumnHeaderControllerDelegate: class {
+//  Informa qual a fonte utilizada para o titulo do label de cabecalho de uma determinada coluna
+// - Se nao for implementado, utiliza a font padrao de um label
     @objc optional func fontForHeader(forColumnAt index: Int) -> UIFont
+    
+//  Informa o tipo de cabecalho para uma determinada coluna (Se vai ser um label de titulo, o proprio campo ou nada)
+// - Se nao for implementado, utiliza o default (label de titulo)
     @objc optional func headerMode(forColumnAt index: Int) -> ColumnFieldHeaderMode
 }
 
 class ColumnsViewContainer: UIView {
+    
+    private enum VariationSpaceMode: Int {
+        case hide = -1
+        case show = 1
+    }
+    
     private(set) var columns: [ColumnContentView] = []
+    private lazy var spaceVariations: [CGFloat] = {
+        return (0..<self.columns.count).map({_ in CGFloat(0)})
+    }()
+    
     weak var mainColumn: ColumnContentView?
     weak var delegate: ColumnsViewContainerControllerDelegate!
     weak var headerDelegate: ColumnHeaderControllerDelegate?
+    
     var normalModeBackgroundColor: UIColor = UIColor.clear
     var headerModeBackgroundColor: UIColor = UIColor.lightGray
     
@@ -103,26 +119,6 @@ class ColumnsViewContainer: UIView {
         }
     }
     
-    private func getWidthDefinitionsOfColumns() -> [(column: Int, width: CGFloat, preferredWidth: CGFloat)]{
-        var widthDefinitions: [(column: Int, width: CGFloat, preferredWidth: CGFloat)] = []
-        var index = 0
-        var totalColumnsWidth: CGFloat = 0
-        self.columns.forEach { _ in
-            var preferredWidth: CGFloat = 0
-            var width: CGFloat = 0
-            if let preferredRelativeWidth = self.delegate?.preferredRelativeWidth?(forColumnAt: index){
-                preferredWidth = preferredRelativeWidth * self.bounds.width
-            }else{
-                preferredWidth = self.delegate?.preferredInitialFixedWidth?(forColumnAt: index) ?? self.bounds.width/CGFloat(self.columns.count)
-            }
-            width = min(preferredWidth, max(self.bounds.width - totalColumnsWidth,0))
-            widthDefinitions.append((column: index, width: width, preferredWidth: preferredWidth))
-            totalColumnsWidth+=width
-            index+=1
-        }
-        return widthDefinitions
-    }
-    
     private func createAndSetColumnsWidthConstraints(){
         var constraintsToActivate: [NSLayoutConstraint] = []
         let widthDefinitions = self.getWidthDefinitionsOfColumns()
@@ -143,10 +139,36 @@ class ColumnsViewContainer: UIView {
         NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }
     
+    private func getWidthDefinitionsOfColumns() -> [(column: Int, width: CGFloat, preferredWidth: CGFloat)]{
+        var widthDefinitions: [(column: Int, width: CGFloat, preferredWidth: CGFloat)] = []
+        var index = 0
+        var totalColumnsWidth: CGFloat = 0
+        self.columns.forEach { _ in
+            var calculatedPreferredWidth: CGFloat = 0
+            var preferred: CGFloat = 0
+            var width: CGFloat = 0
+            if let preferredRelativeWidth = self.delegate?.preferredRelativeWidth?(forColumnAt: index){
+                preferred = preferredRelativeWidth
+                calculatedPreferredWidth = preferredRelativeWidth * self.bounds.width
+            }else{
+                let delegatePreferredWidth = self.delegate?.preferredInitialFixedWidth?(forColumnAt: index)
+                calculatedPreferredWidth = delegatePreferredWidth ?? self.bounds.width/CGFloat(self.columns.count)
+                preferred = calculatedPreferredWidth
+            }
+            width = min(calculatedPreferredWidth, max(self.bounds.width - totalColumnsWidth,0))
+            widthDefinitions.append((column: index, width: width, preferredWidth: preferred))
+            totalColumnsWidth+=width
+            index+=1
+        }
+        return widthDefinitions
+    }
+    
     private func updateColumnsWidthConstraints(){
         let widthDefinitions = self.getWidthDefinitionsOfColumns()
+//        self.redistributeSpace(forColumns: columns, forMode: .hide)
+        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(), forMode: .hide)
         widthDefinitions.forEach { (columnIndex,width,_) in
-            self.columns[columnIndex].updateShowingModeWidth(width)
+            self.columns[columnIndex].updateShowingModeWidth(width+self.spaceVariations[columnIndex])
         }
     }
     
@@ -155,11 +177,49 @@ class ColumnsViewContainer: UIView {
             self.columns.forEach({self.addSubview($0)})
             self.createAndSetColumnsEdgesConstraints()
             self.createAndSetColumnsWidthConstraints()
+            self.hideColumns([0,1,2])
         }
     }
     
-    private func redistributeSpaceToShowingColumns(spaceToRedistribute space: CGFloat){
-        
+    private func redistributeSpaceOfColumns(forSpaceVariation space: CGFloat, forMode mode: VariationSpaceMode){
+        var totalSpace: CGFloat = 0
+        for columnIndex in 0..<self.columns.count {
+            self.spaceVariations[columnIndex] = 0
+            if self.columns[columnIndex].isShowing {
+                if let priorityForColumn = self.delegate.redimensioningPriority?(forColumnAt: columnIndex),
+                    priorityForColumn > 0 && priorityForColumn < 1 && totalSpace < space{
+                    let variation = space * priorityForColumn
+                    totalSpace+=variation
+                    self.spaceVariations[columnIndex]+=variation
+                }else{
+                    let showingColumns = (self.columns.filter({$0.isShowing}).count)
+                    let variation = (space * (1/CGFloat(showingColumns)))
+                    if variation + totalSpace >= space {
+                        self.spaceVariations[columnIndex]+=(space - totalSpace)
+                    }else{
+                        self.spaceVariations[columnIndex]+=variation
+                    }
+                }
+            }
+        }
+    }
+    
+    private func calculateSpaceVariation() -> CGFloat{
+        var spaceVariation: CGFloat = 0
+        self.columns.filter({!$0.isShowing}).forEach({spaceVariation+=$0.showingModeWidth})
+        if spaceVariation == 0 {
+            self.getWidthDefinitionsOfColumns().forEach({ (columnIndex,width,_) in
+                if !self.columns[columnIndex].isShowing {
+                    spaceVariation+=width
+                }
+            })
+        }
+        return spaceVariation
+    }
+    
+    private func redistributeSpace(forColumns columns: [Int], forMode mode: VariationSpaceMode){
+//        let spaceVariation = self.calculateSpaceVariation(forColumn: columns)
+//        self.redistributeSpaceOfColumns(forSpaceVariation: spaceVariation, forMode: mode)
     }
     
     private func setColumnFields(_ columns: [ColumnFieldContent]) {
@@ -169,7 +229,8 @@ class ColumnsViewContainer: UIView {
     }
     
     func hideColumns(_ columns: [Int]) {
-        self.columns.filter({!$0.isShowing}).forEach({$0.show()})
+        let columnsToShow = Array<Int>(0..<self.columns.count).filter({!columns.contains($0) && !self.columns[$0].isShowing})
+        self.showColumns(columnsToShow)
         columns.forEach({self.columns[$0].hide()})
     }
     
