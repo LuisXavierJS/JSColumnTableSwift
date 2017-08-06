@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -79,42 +80,33 @@
                         <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fqq-ck-bPG">
-                                <rect key="frame" x="0.0" y="272" width="80" height="128"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" id="9gy-5Y-KKN"/>
-                                    <constraint firstAttribute="height" constant="128" id="YT2-06-Zty"/>
-                                    <constraint firstAttribute="width" constant="80" id="e99-Y4-SN5"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RFP-yN-pCV">
-                                <rect key="frame" x="80" y="272" width="128" height="128"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YSf-RC-rFW">
+                                <rect key="frame" x="62" y="149.99999999999997" width="240" height="223.33333333333329"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IwI-pf-8qZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="223.33333333333331"/>
+                                        <string key="text">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="8D1-XP-lAU"/>
-                                    <constraint firstAttribute="width" constant="128" id="p78-fV-Q6h"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zQY-4R-mVr">
-                                <rect key="frame" x="208" y="272" width="116" height="128"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="vE3-qE-eGI"/>
-                                    <constraint firstAttribute="width" constant="116" id="x4b-Xf-VI7"/>
-                                    <constraint firstAttribute="height" constant="128" id="xcE-Ou-tpS"/>
+                                    <constraint firstAttribute="bottom" secondItem="IwI-pf-8qZ" secondAttribute="bottom" id="Fdl-p1-Ind"/>
+                                    <constraint firstItem="IwI-pf-8qZ" firstAttribute="leading" secondItem="YSf-RC-rFW" secondAttribute="leading" id="J2Z-1X-6D0"/>
+                                    <constraint firstItem="IwI-pf-8qZ" firstAttribute="centerX" secondItem="YSf-RC-rFW" secondAttribute="centerX" id="QyM-LF-RjI"/>
+                                    <constraint firstItem="IwI-pf-8qZ" firstAttribute="centerY" secondItem="YSf-RC-rFW" secondAttribute="centerY" id="T4q-Ty-QlA"/>
+                                    <constraint firstItem="IwI-pf-8qZ" firstAttribute="top" secondItem="YSf-RC-rFW" secondAttribute="top" id="kab-4t-Qpv"/>
+                                    <constraint firstAttribute="trailing" secondItem="IwI-pf-8qZ" secondAttribute="trailing" id="mKI-uR-wjZ"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="zQY-4R-mVr" firstAttribute="centerY" secondItem="beX-al-8e4" secondAttribute="centerY" id="0ni-ZY-q8v"/>
-                            <constraint firstItem="RFP-yN-pCV" firstAttribute="leading" secondItem="Fqq-ck-bPG" secondAttribute="trailing" id="Uia-PJ-Y9n"/>
-                            <constraint firstItem="Fqq-ck-bPG" firstAttribute="centerY" secondItem="beX-al-8e4" secondAttribute="centerY" id="api-0h-CMe"/>
-                            <constraint firstItem="Fqq-ck-bPG" firstAttribute="leading" secondItem="beX-al-8e4" secondAttribute="leading" id="jef-hQ-cRK"/>
-                            <constraint firstItem="zQY-4R-mVr" firstAttribute="leading" secondItem="RFP-yN-pCV" secondAttribute="trailing" id="qs7-op-JmN"/>
-                            <constraint firstItem="RFP-yN-pCV" firstAttribute="centerY" secondItem="beX-al-8e4" secondAttribute="centerY" id="yfN-od-6lB"/>
-                            <constraint firstAttribute="trailing" secondItem="zQY-4R-mVr" secondAttribute="trailing" id="yyO-QM-jlP"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="YSf-RC-rFW" secondAttribute="trailing" constant="92" id="9wd-uE-F5R"/>
+                            <constraint firstItem="YSf-RC-rFW" firstAttribute="leading" secondItem="beX-al-8e4" secondAttribute="leadingMargin" constant="42" id="eDW-uk-Xac"/>
+                            <constraint firstItem="YSf-RC-rFW" firstAttribute="top" secondItem="3OA-cZ-caR" secondAttribute="bottom" constant="150" id="nJz-4J-mds"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="PuH-lS-yO2"/>

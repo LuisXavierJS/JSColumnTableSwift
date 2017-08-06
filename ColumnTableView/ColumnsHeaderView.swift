@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnHeaderControllerDelegate {
+class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnHeaderControllerDelegate, ColumnsViewProtocol {
     private var columnsViewContainerCell: T = T()
     
     weak var columnsViewContainer: ColumnsViewContainer! {

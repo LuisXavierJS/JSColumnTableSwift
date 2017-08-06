@@ -19,7 +19,7 @@ import UIKit
 //  Informa a prioridade para ajuste de comprimento de uma determinada coluna, caso outra coluna seja ocultada ou exibida no container.
 // - Se nao for implementado, a prioridade de redimensionamento sera igual para todas as colunas
 // - Se a soma de prioridade de todas as colunas for inferior a 0 ou superior a 100, as colunas finais podem nao respeitar as prioridades de redimensionamento desejadas.
-    @objc optional func redimensioningPriority(forColumnAt index: Int) -> CGFloat
+    @objc optional func redimensioningScaleForFreeSpace(forColumnAt index: Int) -> CGFloat
     
 //  Informa a preferencia de largura inicial para uma coluna durante o layout:
 // -  Se nao for implementado, a preferencia de largura inicial sera igual para todas as colunas.
@@ -82,6 +82,7 @@ class ColumnsViewContainer: UIView {
         constraintsToActivate.append(contentsOf:NSLayoutConstraint.constraints(withVisualFormat: "V:|[column]|",
                                                                                metrics: nil,
                                                                                views: ["column":leftColumn]))
+        
         NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }
     
@@ -151,8 +152,8 @@ class ColumnsViewContainer: UIView {
         for columnIndex in 0..<self.columns.count {
             self.spaceVariations[columnIndex] = 0
             if self.columns[columnIndex].isShowing {
-                if let priorityForColumn = self.delegate?.redimensioningPriority?(forColumnAt: columnIndex),
-                    priorityForColumn > 0 && priorityForColumn < 1 && totalSpace < space{
+                if let priorityForColumn = self.delegate?.redimensioningScaleForFreeSpace?(forColumnAt: columnIndex),
+                    priorityForColumn >= 0 && priorityForColumn <= 1 && totalSpace < space{
                     let variation = space * priorityForColumn
                     totalSpace+=variation
                     self.spaceVariations[columnIndex]+=variation

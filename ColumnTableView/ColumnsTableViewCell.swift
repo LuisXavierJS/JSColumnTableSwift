@@ -8,7 +8,12 @@
 
 import UIKit
 
-class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDelegate {
+protocol ColumnsViewProtocol: class {
+    func hideColumns(_ columns: [Int])
+    func showColumns(_ columns: [Int])
+}
+
+class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDelegate, ColumnsViewProtocol {
     let containerView: ColumnsViewContainer = ColumnsViewContainer()
     
     private lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
@@ -77,6 +82,13 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
                 ColumnFieldContent(novoNome,title: "novoNome"),
                 ColumnFieldContent(executar,title: "executar"),
                 ColumnFieldContent(imagem,title:"imagem")]
+    }    
+    
+    func redimensioningScaleForFreeSpace(forColumnAt index: Int) -> CGFloat {
+        return Array<CGFloat>(arrayLiteral: 0,0.5,0.5,0,0)[index]
     }
     
+    func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
+        return Array<CGFloat>(arrayLiteral: 60,200,200,200,50)[index]
+    }
 }
