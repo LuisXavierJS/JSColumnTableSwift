@@ -44,43 +44,21 @@ import UIKit
 
 class ColumnsViewContainer: UIView {
     
-    private enum VariationSpaceMode: Int {
-        case hide = -1
-        case show = 1
-    }
-    
+    private(set) weak var mainColumn: ColumnContentView?
     private(set) var columns: [ColumnContentView] = []
+    
     private lazy var spaceVariations: [CGFloat] = {
         return (0..<self.columns.count).map({_ in CGFloat(0)})
     }()
     
-    weak var mainColumn: ColumnContentView?
-    weak var delegate: ColumnsViewContainerControllerDelegate!
+    
+    
+    weak var delegate: ColumnsViewContainerControllerDelegate?
     weak var headerDelegate: ColumnHeaderControllerDelegate?
     
     var normalModeBackgroundColor: UIColor = UIColor.clear
     var headerModeBackgroundColor: UIColor = UIColor.lightGray
-    
-    convenience init(){
-        self.init(frame: CGRect.zero)
-        self.setupViews()
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setupViews()
-    }
-    
 
-    private func setupViews(){
-
-    }
-    
     private func deactivateCurrentAllColumnsAndConstraints(){
         self.columns.forEach { (c) in
             NSLayoutConstraint.deactivate(c.constraints)
@@ -89,6 +67,7 @@ class ColumnsViewContainer: UIView {
         NSLayoutConstraint.deactivate(self.constraints)
     }
     
+    //Atribuindo as constraints de trailing, leading, top e bottom para todas as colunas, exceto o trailing ultima
     private func setEdgeConstraints(rightCollumn: ColumnContentView?, leftColumn: ColumnContentView){
         let isFirstColumn = rightCollumn == nil
         
@@ -106,6 +85,7 @@ class ColumnsViewContainer: UIView {
         NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }
     
+    //Atribuindo as constraints de trailing para a ultima coluna, e chamando o metodo para atribuir para as demais colunas.
     private func createAndSetColumnsEdgesConstraints(){
         var lastColumn: ColumnContentView?
         self.columns.forEach { (column) in
@@ -119,6 +99,7 @@ class ColumnsViewContainer: UIView {
         }
     }
     
+    //Criando as constraints de largura fixa para todas as colunas, exceto a coluna principal (que possui largura variavel)
     private func createAndSetColumnsWidthConstraints(){
         var constraintsToActivate: [NSLayoutConstraint] = []
         let widthDefinitions = self.getWidthDefinitionsOfColumns()
@@ -139,6 +120,7 @@ class ColumnsViewContainer: UIView {
         NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }
     
+    //Calculando as definicoes de comprimento calculados (com base na sugestao do delegate) e sugeridos pelo delegate (o delegate pode sugerir muita merda haha) de cada coluna.
     private func getWidthDefinitionsOfColumns() -> [(column: Int, width: CGFloat, preferredWidth: CGFloat)]{
         var widthDefinitions: [(column: Int, width: CGFloat, preferredWidth: CGFloat)] = []
         var index = 0
@@ -163,30 +145,13 @@ class ColumnsViewContainer: UIView {
         return widthDefinitions
     }
     
-    private func updateColumnsWidthConstraints(){
-        let widthDefinitions = self.getWidthDefinitionsOfColumns()
-//        self.redistributeSpace(forColumns: columns, forMode: .hide)
-        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(), forMode: .hide)
-        widthDefinitions.forEach { (columnIndex,width,_) in
-            self.columns[columnIndex].updateShowingModeWidth(width+self.spaceVariations[columnIndex])
-        }
-    }
-    
-    private func setupAllColumns(){
-        if self.columns.count > 0 {
-            self.columns.forEach({self.addSubview($0)})
-            self.createAndSetColumnsEdgesConstraints()
-            self.createAndSetColumnsWidthConstraints()
-            self.hideColumns([0,1,2])
-        }
-    }
-    
-    private func redistributeSpaceOfColumns(forSpaceVariation space: CGFloat, forMode mode: VariationSpaceMode){
+    //Calculando a distribuicao de espaco livre na linha para todas as colunas visiveis (nessa hora que o delegate pode informar prioridades erradas e bugar a visualizacao do esquema..)
+    private func redistributeSpaceOfColumns(forSpaceVariation space: CGFloat){
         var totalSpace: CGFloat = 0
         for columnIndex in 0..<self.columns.count {
             self.spaceVariations[columnIndex] = 0
             if self.columns[columnIndex].isShowing {
-                if let priorityForColumn = self.delegate.redimensioningPriority?(forColumnAt: columnIndex),
+                if let priorityForColumn = self.delegate?.redimensioningPriority?(forColumnAt: columnIndex),
                     priorityForColumn > 0 && priorityForColumn < 1 && totalSpace < space{
                     let variation = space * priorityForColumn
                     totalSpace+=variation
@@ -204,6 +169,7 @@ class ColumnsViewContainer: UIView {
         }
     }
     
+    //Calculando o espaco livre de uma linha.
     private func calculateSpaceVariation() -> CGFloat{
         var spaceVariation: CGFloat = 0
         self.columns.filter({!$0.isShowing}).forEach({spaceVariation+=$0.showingModeWidth})
@@ -217,48 +183,73 @@ class ColumnsViewContainer: UIView {
         return spaceVariation
     }
     
-    private func redistributeSpace(forColumns columns: [Int], forMode mode: VariationSpaceMode){
-//        let spaceVariation = self.calculateSpaceVariation(forColumn: columns)
-//        self.redistributeSpaceOfColumns(forSpaceVariation: spaceVariation, forMode: mode)
+    //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
+    private func updateColumnsWidthConstraints(){
+        let widthDefinitions = self.getWidthDefinitionsOfColumns()
+        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation())
+        widthDefinitions.forEach { (columnIndex,width,_) in
+            self.columns[columnIndex].updateShowingModeWidth(width+self.spaceVariations[columnIndex])
+        }
     }
     
+    //Configurando todas as colunas, e escondendo as desejadas pelo delegate.
+    private func setupAllColumns(){
+        if self.columns.count > 0 {
+            self.columns.forEach({self.addSubview($0)})
+            self.createAndSetColumnsEdgesConstraints()
+            self.createAndSetColumnsWidthConstraints()
+        }
+    }
+    
+    //Resetando as colunas atuais e atribuindo novas colunas.
     private func setColumnFields(_ columns: [ColumnFieldContent]) {
         self.deactivateCurrentAllColumnsAndConstraints()
         self.columns = columns.map({return ColumnContentView(withField: $0)})
         self.setupAllColumns()
     }
     
+    //Exibe as colunas que estavam escondidas anteriormente e esconde as colunas passadas por parametro
     func hideColumns(_ columns: [Int]) {
-        let columnsToShow = Array<Int>(0..<self.columns.count).filter({!columns.contains($0) && !self.columns[$0].isShowing})
-        self.showColumns(columnsToShow)
-        columns.forEach({self.columns[$0].hide()})
+        if columns.count > 0 {
+            let columnsToShow = Array<Int>(0..<self.columns.count).filter({!columns.contains($0) && !self.columns[$0].isShowing})
+            self.showColumns(columnsToShow)
+            columns.forEach({self.columns[$0].hide()})
+        }
     }
     
+    //Exibe as colunas passadas por parametro
     func showColumns(_ columns: [Int]) {
         columns.forEach({self.columns[$0].show()})
     }
     
+    //Ativa o modo de cabecalho das colunas
     func setHeaderMode(_ on: Bool){
+        guard let headerDelegate = self.headerDelegate else {return}
         self.backgroundColor = on ? self.headerModeBackgroundColor : self.normalModeBackgroundColor
         var index: Int = 0
         self.columns.forEach({
-            let headerMode = self.headerDelegate?.headerMode?(forColumnAt: index)
-            let font = self.headerDelegate?.fontForHeader?(forColumnAt: index)
+            let headerMode = headerDelegate.headerMode?(forColumnAt: index)
+            let font = headerDelegate.fontForHeader?(forColumnAt: index)
             $0.setHeaderMode(on,headerMode,font)
             index+=1
         })
     }
     
+    //Configura todas as colunas assim que possui uma superview (desta forma, podendo configurar as constraints corretamente)
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
-        self.setColumnFields(self.delegate.columnsFields)
+        if let delegate = self.delegate{
+            self.setColumnFields(delegate.columnsFields)
+        }
     }
     
+    //Atualiza o comprimento das constraints conforme o layout atual da tabela.
     override func layoutSubviews() {
         super.layoutSubviews()
         self.updateColumnsWidthConstraints()
     }
     
+    //Lida com os casos de constraints quebrada quando o dispositivo gira e altera o layout da tabela de forma drastica.. Longas batalhas ainda serao travadas quanto a isto.
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.verticalSizeClass == .compact &&

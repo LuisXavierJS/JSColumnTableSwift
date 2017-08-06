@@ -15,3 +15,15 @@ extension NSLayoutConstraint {
         self.activate(notActive)
     }
 }
+
+
+extension UITableViewCell{
+    weak var tableView: UITableView? {
+        var view: UIView? = self
+        repeat {
+            view = view?.superview
+            if let table = view as? UITableView { return table }
+        } while view?.superview != nil
+        return view as? UITableView
+    }
+}

@@ -37,6 +37,14 @@ class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, Co
         self.columnsViewContainer.setHeaderMode(true)
     }
     
+    func hideColumns(_ columns: [Int]){
+        self.columnsViewContainer.hideColumns(columns)
+    }
+    
+    func showColumns(_ columns: [Int]){
+        self.columnsViewContainer.showColumns(columns)
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
     }

@@ -9,27 +9,47 @@
 import UIKit
 
 /*
+ Perdi um tempao nessa desgraca de solucao.. apanhei bastante pras constraints programaticas e pros calculos das paradas, mas mesmo assim ficou imperfeito e defeituoso em alguns casos (apesar de ja resolver o problema de colunas).
+ Ainda preciso de tempo pra reavaliar e melhorar o codigo e a logica..
+ 
  ATUAIS LIMITACOES DA TABELA:
  As limitacoes abaixo sao necessarias por enquanto, mas pode ser resolvido atraves da melhoria dos algoritmos de criacao e controle das constraints das colunas.
  - Ela nao funciona bem com modificacoes dinamicas de tamanho dela.. Se o dispositivo girar e isso mudar a largura dela, por exemplo, algumas constraints podem acabar quebrando, o que nao significa que necessariamente vai zoar tudo (eh comum a gente ver constraint quebrando mas sem sinais aparentes na tela.. o iOS sabe lidar bem com isso).
- - Ela precisa que uma das colunas seja considerada "principal", que nunca podera ser ocultada pelo hideColumns
+ - Ela precisa que uma das colunas seja considerada "principal", que ira ocupar espacos que podem sobrar na tabela caso ocorra algum conflito de espaco entre as colunas e a linha.
  */
 
+@objc protocol TableColumnsVisibilityControllerDelegate: class {
+    func hideColumns(forTable: ColumnsTableView) -> [Int]
+}
+
 class ColumnsTableView: UITableView {
+    weak var columnsControllerDelegate: TableColumnsVisibilityControllerDelegate?
     
-    private func setupViews(){
-        
+    override func dequeueReusableCell(withIdentifier identifier: String) -> UITableViewCell? {
+        let cell = super.dequeueReusableCell(withIdentifier: identifier)
+        if let columnsCell = cell as? ColumnsTableViewCell,
+            let columnsToHide = self.columnsControllerDelegate?.hideColumns(forTable: self){
+            columnsCell.hideColumns(columnsToHide)
+        }
+        return cell
     }
     
-    override init(frame: CGRect, style: UITableViewStyle) {
-        super.init(frame: frame, style: style)
-        self.setupViews()
+    override func dequeueReusableCell(withIdentifier identifier: String, for indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+        if let columnsCell = cell as? ColumnsTableViewCell,
+            let columnsToHide = self.columnsControllerDelegate?.hideColumns(forTable: self){
+            columnsCell.hideColumns(columnsToHide)
+        }
+        return cell
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setupViews()
+    override func dequeueReusableHeaderFooterView(withIdentifier identifier: String) -> UITableViewHeaderFooterView? {
+        let header = super.dequeueReusableHeaderFooterView(withIdentifier: identifier)
+        if let columnsHeader = header as? ColumnsHeaderView,
+            let columnsToHide = self.columnsControllerDelegate?.hideColumns(forTable: self) {
+            columnsHeader.hideColumns(columnsToHide)
+        }
+        return header
     }
-    
 
 }

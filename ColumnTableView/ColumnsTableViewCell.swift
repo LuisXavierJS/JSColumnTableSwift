@@ -14,9 +14,17 @@ class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDeleg
     private lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
         return self.createContainerConstraintsToActivateOnSetup()
     }()
-    
+        
     var columnsFields: [ColumnFieldContent] {
         return []
+    }
+    
+    func hideColumns(_ columns: [Int]){
+        self.containerView.hideColumns(columns)
+    }
+    
+    func showColumns(_ columns: [Int]){
+        self.containerView.showColumns(columns)
     }
     
     func setupViews(){
@@ -28,7 +36,6 @@ class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDeleg
     }
     
     private func setContainerConstraintsIfNeeded(){
-        //So sera preciso setar constraint se a cell for instanciada a partir do dequeue de uma tabela (ou seja: com reuse nil)
         let needsSetConstraints = self.reuseIdentifier != nil
         
         if needsSetConstraints{
@@ -74,8 +81,14 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
 
     var columnSizes: [CGFloat] = [0.1,0.3,0.2,0.3,0.1]
     
+    var columnResizePriorities: [CGFloat] = [0.1,0.1,0.1,0.1,0.1]
+    
     func preferredRelativeWidthForColumn(at index: Int) -> CGFloat {
         return columnSizes[index]
+    }
+    
+    func redimensioningPriority(forColumnAt index: Int) -> CGFloat {
+        return columnResizePriorities[index]
     }
     
 }
