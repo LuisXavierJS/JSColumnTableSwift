@@ -18,7 +18,6 @@ import UIKit
     
 //  Informa a prioridade para ajuste de comprimento de uma determinada coluna, caso outra coluna seja ocultada ou exibida no container.
 // - Se nao for implementado, a prioridade de redimensionamento sera igual para todas as colunas
-// - Se a soma de prioridade de todas as colunas for inferior a 0 ou superior a 100, as colunas finais podem nao respeitar as prioridades de redimensionamento desejadas.
     @objc optional func redimensioningScaleForFreeSpace(forColumnAt index: Int) -> CGFloat
     
 //  Informa a preferencia de largura inicial para uma coluna durante o layout:
