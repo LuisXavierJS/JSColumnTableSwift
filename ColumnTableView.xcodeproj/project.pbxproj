@@ -21,6 +21,7 @@
 		8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A03981F340EE30053CD09 /* ColumnsHeaderView.swift */; };
 		8E8A039C1F342B570053CD09 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A039B1F342B570053CD09 /* Helpers.swift */; };
 		8E8A039E1F342F0D0053CD09 /* ColumnContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A039D1F342F0D0053CD09 /* ColumnContentView.swift */; };
+		8E93E00E1F37E8BB00E72856 /* AnonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E93E00D1F37E8BB00E72856 /* AnonTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		8E8A03981F340EE30053CD09 /* ColumnsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnsHeaderView.swift; sourceTree = "<group>"; };
 		8E8A039B1F342B570053CD09 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		8E8A039D1F342F0D0053CD09 /* ColumnContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnContentView.swift; sourceTree = "<group>"; };
+		8E93E00D1F37E8BB00E72856 /* AnonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				8E8A035D1F3404040053CD09 /* ViewController.swift */,
+				8E93E00D1F37E8BB00E72856 /* AnonTableViewCell.swift */,
 			);
 			name = "Fuking Controllers";
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				8E8A03951F340BA00053CD09 /* ColumnsTableViewCell.swift in Sources */,
 				8E8A039C1F342B570053CD09 /* Helpers.swift in Sources */,
 				8E8A038E1F3405330053CD09 /* ColumnsTableView.swift in Sources */,
+				8E93E00E1F37E8BB00E72856 /* AnonTableViewCell.swift in Sources */,
 				8E8A039E1F342F0D0053CD09 /* ColumnContentView.swift in Sources */,
 				8E8A03641F3404040053CD09 /* ColumnTableView.xcdatamodeld in Sources */,
 				8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */,
@@ -593,6 +597,7 @@
 				8E8A03851F3404040053CD09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8E8A03861F3404040053CD09 /* Build configuration list for PBXNativeTarget "ColumnTableViewTests" */ = {
 			isa = XCConfigurationList;
@@ -601,6 +606,7 @@
 				8E8A03881F3404040053CD09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8E8A03891F3404040053CD09 /* Build configuration list for PBXNativeTarget "ColumnTableViewUITests" */ = {
 			isa = XCConfigurationList;
@@ -609,6 +615,7 @@
 				8E8A038B1F3404040053CD09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

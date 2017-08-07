@@ -91,4 +91,10 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
     func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
         return Array<CGFloat>(arrayLiteral: 60,200,200,200,50)[index]
     }
+    
+    override func setupViews() {
+        super.setupViews()
+        self.nome.numberOfLines = 0
+        self.nome.lineBreakMode = .byWordWrapping
+    }
 }
