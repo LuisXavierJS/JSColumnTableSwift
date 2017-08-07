@@ -117,13 +117,14 @@ class ColumnContentView: UIView {
                                                             attribute: .width,
                                                             multiplier: 0.9,
                                                             constant: 0))
+        
             constraintsToActivate.append(NSLayoutConstraint(item: self.fieldContent.field,
                                                             attribute: .height,
                                                             relatedBy: .equal,
                                                             toItem: self,
                                                             attribute: .height,
                                                             multiplier: 0.9,
-                                                            constant: 0))
+                                                            constant: 0))            
         }
         NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
     }

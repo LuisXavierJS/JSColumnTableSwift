@@ -79,9 +79,9 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
     override var columnsFields: [ColumnFieldContent] {
         return [ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
                 ColumnFieldContent(nome, title: "nome"),
-                ColumnFieldContent(novoNome,title: "novoNome"),
-                ColumnFieldContent(executar,title: "executar"),
-                ColumnFieldContent(imagem,title:"imagem")]
+                ColumnFieldContent(novoNome,title: "novoNome", CGSize(width:200,height:30)),
+                ColumnFieldContent(executar,title: "executar", CGSize(width:200,height:50)),
+                ColumnFieldContent(imagem,title:"imagem", CGSize(width: 100, height: 50))]
     }    
     
     func redimensioningScaleForFreeSpace(forColumnAt index: Int) -> CGFloat {
@@ -96,5 +96,8 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
         super.setupViews()
         self.nome.numberOfLines = 0
         self.nome.lineBreakMode = .byWordWrapping
+        self.novoNome.backgroundColor = UIColor.blue
+        self.executar.backgroundColor = UIColor.cyan
+        self.imagem.backgroundColor = UIColor.magenta
     }
 }

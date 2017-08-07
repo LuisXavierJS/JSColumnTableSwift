@@ -16,7 +16,7 @@ import UIKit
  As limitacoes abaixo sao necessarias por enquanto, mas pode ser resolvido atraves da melhoria dos algoritmos de criacao e controle das constraints das colunas.
  - Ela nao funciona bem com modificacoes dinamicas de tamanho dela.. Se o dispositivo girar e isso mudar a largura dela, por exemplo, algumas constraints podem acabar quebrando, o que nao significa que necessariamente vai zoar tudo (eh comum a gente ver constraint quebrando mas sem sinais aparentes na tela.. o iOS sabe lidar bem com isso).
  - Ela precisa que uma das colunas seja considerada "principal", que ira ocupar espacos que podem sobrar na tabela caso ocorra algum conflito de espaco entre as colunas e a linha.
- - A tabela nao esta funcionando com altura dinamica das linhas.
+ - A tabela nao esta lidando bem com altura dinamica das linhas (com label de multilinhas, por exemplo).
  */
 
 @objc protocol TableColumnsVisibilityControllerDelegate: class {
