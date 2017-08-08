@@ -19,12 +19,12 @@ import UIKit
  - A tabela nao esta lidando bem com altura dinamica das linhas (com label de multilinhas, por exemplo).
  */
 
-@objc protocol TableColumnsVisibilityControllerDelegate: class {
+@objc public protocol TableColumnsVisibilityControllerDelegate: class {
     func hideColumns(forTable: ColumnsTableView) -> [Int]
 }
 
-class ColumnsTableView: UITableView {
-    weak var columnsControllerDelegate: TableColumnsVisibilityControllerDelegate?
+open class ColumnsTableView: UITableView {
+    open weak var columnsControllerDelegate: TableColumnsVisibilityControllerDelegate?
     
     private func setColumnsVisibility(forColumnsView view: UIView?){
         if let columnsView = view as? ColumnsViewProtocol,
@@ -33,19 +33,19 @@ class ColumnsTableView: UITableView {
         }
     }
     
-    override func dequeueReusableCell(withIdentifier identifier: String) -> UITableViewCell? {
+    open override func dequeueReusableCell(withIdentifier identifier: String) -> UITableViewCell? {
         let cell = super.dequeueReusableCell(withIdentifier: identifier)
         self.setColumnsVisibility(forColumnsView: cell)
         return cell
     }
     
-    override func dequeueReusableCell(withIdentifier identifier: String, for indexPath: IndexPath) -> UITableViewCell {
+    open override func dequeueReusableCell(withIdentifier identifier: String, for indexPath: IndexPath) -> UITableViewCell {
         let cell = super.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         self.setColumnsVisibility(forColumnsView: cell)
         return cell
     }
     
-    override func dequeueReusableHeaderFooterView(withIdentifier identifier: String) -> UITableViewHeaderFooterView? {
+    open override func dequeueReusableHeaderFooterView(withIdentifier identifier: String) -> UITableViewHeaderFooterView? {
         let header = super.dequeueReusableHeaderFooterView(withIdentifier: identifier)
         self.setColumnsVisibility(forColumnsView: header)
         return header

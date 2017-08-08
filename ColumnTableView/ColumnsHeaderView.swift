@@ -8,19 +8,19 @@
 
 import UIKit
 
-class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnHeaderControllerDelegate, ColumnsViewProtocol {
+open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnHeaderControllerDelegate, ColumnsViewProtocol {
     private var columnsViewContainerCell: T = T()
     
-    weak var columnsViewContainer: ColumnsViewContainer! {
+    open weak var columnsViewContainer: ColumnsViewContainer! {
         return self.columnsViewContainerCell.containerView
     }
     
-    override init(reuseIdentifier: String?) {
+    public override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         self.setupViews()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setupViews()
     }
@@ -37,15 +37,15 @@ class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, Co
         self.columnsViewContainer.setHeaderMode(true)
     }
     
-    func hideColumns(_ columns: [Int]){
+    open func hideColumns(_ columns: [Int]){
         self.columnsViewContainer.hideColumns(columns)
     }
     
-    func showColumns(_ columns: [Int]){
+    open func showColumns(_ columns: [Int]){
         self.columnsViewContainer.showColumns(columns)
     }
     
-    override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
     }
 }

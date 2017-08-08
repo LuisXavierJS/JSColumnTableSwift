@@ -18,7 +18,7 @@ This is a description of the magnificent JSColumnTableViewSwift that will give y
   s.homepage         = 'https://github.com/LuisXavierJS/JSColumnTableSwift'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Jorge Luis Xavier' => '' }
-  s.source           = { :git => 'https://github.com/Anderson Lucas C. Ramos/JSColumnTableViewSwift.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/LuisXavierJS/JSColumnTableSwift.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '9.0'
 
