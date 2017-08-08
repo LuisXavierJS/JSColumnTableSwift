@@ -8,44 +8,43 @@
 
 import UIKit
 
-@objc enum ColumnFieldHeaderMode: Int{
+@objc public enum ColumnFieldHeaderMode: Int{
     case title = 1
     case none = 0
     case field = 2
 }
 
-class ColumnFieldContent: NSObject {
-    weak var field: UIView!
-    let title: String
-    let preferredSizeOfField: CGSize?
+open class ColumnFieldContent: NSObject {
+    open weak var field: UIView!
+    open let title: String
+    open let preferredSizeOfField: CGSize?
     
-    init(_ field: UIView, title: String,_ preferredSize: CGSize? = nil){
+    public init(_ field: UIView, title: String,_ preferredSize: CGSize? = nil) {
         self.field = field
         self.title = title
         self.preferredSizeOfField = preferredSize
         super.init()
     }
-
 }
 
-class ColumnContentView: UIView {
-    private(set) var fieldContent: ColumnFieldContent!
+open class ColumnContentView: UIView {
+    open private(set) var fieldContent: ColumnFieldContent!
     
-    private(set) var isShowing: Bool = true
+    open private(set) var isShowing: Bool = true
     
-    private(set) var widthConstraint: NSLayoutConstraint!
+    open private(set) var widthConstraint: NSLayoutConstraint!
     
-    private(set) var showingModeWidth: CGFloat = 0
+    open private(set) var showingModeWidth: CGFloat = 0
     
-    private(set) weak var rightSeparator: UIView!
+    open private(set) weak var rightSeparator: UIView!
     
-    private(set) weak var leftSeparator: UIView!
+    open private(set) weak var leftSeparator: UIView!
     
-    private(set) var headerTitle: UILabel?
+    open private(set) var headerTitle: UILabel?
     
-    private(set) var headerMode: ColumnFieldHeaderMode = .title
+    open private(set) var headerMode: ColumnFieldHeaderMode = .title
     
-    var fontOfHeaderTitle: UIFont? {
+    open var fontOfHeaderTitle: UIFont? {
         didSet{
             self.updateHeaderTitleFont()
         }
@@ -63,13 +62,13 @@ class ColumnContentView: UIView {
                                    constant: 0)]
     }()
     
-    init(withField field: ColumnFieldContent){
+    public init(withField field: ColumnFieldContent){
         self.fieldContent = field
         super.init(frame: CGRect.zero)
         self.setupViews()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setupViews()
     }
@@ -180,7 +179,7 @@ class ColumnContentView: UIView {
         }
     }
     
-    func setWidth(constraint: NSLayoutConstraint){
+    open func setWidth(constraint: NSLayoutConstraint){
         if let actualWidthConstraint = self.widthConstraint{
             NSLayoutConstraint.deactivate([actualWidthConstraint])
         }
@@ -189,28 +188,28 @@ class ColumnContentView: UIView {
         self.showingModeWidth = self.widthConstraint.constant
     }
     
-    func updateShowingModeWidth(_ width: CGFloat){
+    open func updateShowingModeWidth(_ width: CGFloat){
         self.showingModeWidth = width
         if self.isShowing {
             self.widthConstraint.constant = self.showingModeWidth
         }
     }
     
-    func show(){
+    open func show(){
         self.isShowing = true
         self.clipsToBounds = false
         self.alpha = 1
         self.widthConstraint.constant = self.showingModeWidth
     }
     
-    func hide(){
+    open func hide(){
         self.isShowing = false
         self.clipsToBounds = true
         self.alpha = 0
         self.widthConstraint.constant = 0
     }
     
-    func setHeaderMode(_ on: Bool, _ mode: ColumnFieldHeaderMode?, _ font: UIFont? = nil){
+    open func setHeaderMode(_ on: Bool, _ mode: ColumnFieldHeaderMode?, _ font: UIFont? = nil){
         self.fontOfHeaderTitle = font
         self.headerMode = mode ?? .title
         if on {
