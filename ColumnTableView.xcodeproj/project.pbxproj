@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		716CAA301F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716CAA2F1F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift */; };
 		8E8A035C1F3404040053CD09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A035B1F3404040053CD09 /* AppDelegate.swift */; };
 		8E8A035E1F3404040053CD09 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A035D1F3404040053CD09 /* ViewController.swift */; };
 		8E8A03611F3404040053CD09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E8A035F1F3404040053CD09 /* Main.storyboard */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		716CAA2F1F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecialColumnsTableViewCell.swift; sourceTree = "<group>"; };
 		8E8A03581F3404040053CD09 /* ColumnTableView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColumnTableView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E8A035B1F3404040053CD09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E8A035D1F3404040053CD09 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 			children = (
 				8E8A035D1F3404040053CD09 /* ViewController.swift */,
 				8E93E00D1F37E8BB00E72856 /* AnonTableViewCell.swift */,
+				716CAA2F1F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift */,
 			);
 			name = "Fuking Controllers";
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 				8E93E00E1F37E8BB00E72856 /* AnonTableViewCell.swift in Sources */,
 				8E8A039E1F342F0D0053CD09 /* ColumnContentView.swift in Sources */,
 				8E8A03641F3404040053CD09 /* ColumnTableView.xcdatamodeld in Sources */,
+				716CAA301F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift in Sources */,
 				8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */,
 				8E8A035C1F3404040053CD09 /* AppDelegate.swift in Sources */,
 			);
@@ -502,7 +506,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = ColumnTableView/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jorge.xavier.ColumnTableView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -515,7 +521,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = ColumnTableView/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jorge.xavier.ColumnTableView;
 				PRODUCT_NAME = "$(TARGET_NAME)";

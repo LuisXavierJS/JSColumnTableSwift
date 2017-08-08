@@ -9,7 +9,7 @@
 import UIKit
 
 
-@objc protocol ColumnsViewContainerControllerDelegate: class {
+@objc public protocol ColumnsViewContainerControllerDelegate: class {
     var columnsFields: [ColumnFieldContent] {get}
     
 //  Informa coluna que preferencialmente tera seu tamanho variavel conforme a variacao de tamanho da superview e das demais colunas
@@ -31,7 +31,7 @@ import UIKit
     @objc optional func preferredRelativeWidth(forColumnAt index: Int) -> CGFloat
 }
 
-@objc protocol ColumnHeaderControllerDelegate: class {
+@objc public protocol ColumnHeaderControllerDelegate: class {
 //  Informa qual a fonte utilizada para o titulo do label de cabecalho de uma determinada coluna
 // - Se nao for implementado, utiliza a font padrao de um label
     @objc optional func fontForHeader(forColumnAt index: Int) -> UIFont
@@ -41,22 +41,19 @@ import UIKit
     @objc optional func headerMode(forColumnAt index: Int) -> ColumnFieldHeaderMode
 }
 
-class ColumnsViewContainer: UIView {
-    
-    private(set) weak var mainColumn: ColumnContentView?
-    private(set) var columns: [ColumnContentView] = []
+open class ColumnsViewContainer: UIView {
+    open private(set) weak var mainColumn: ColumnContentView?
+    open private(set) var columns: [ColumnContentView] = []
     
     private lazy var spaceVariations: [CGFloat] = {
         return (0..<self.columns.count).map({_ in CGFloat(0)})
     }()
     
+    open weak var delegate: ColumnsViewContainerControllerDelegate?
+    open weak var headerDelegate: ColumnHeaderControllerDelegate?
     
-    
-    weak var delegate: ColumnsViewContainerControllerDelegate?
-    weak var headerDelegate: ColumnHeaderControllerDelegate?
-    
-    var normalModeBackgroundColor: UIColor = UIColor.clear
-    var headerModeBackgroundColor: UIColor = UIColor.lightGray
+    open var normalModeBackgroundColor: UIColor = UIColor.clear
+    open var headerModeBackgroundColor: UIColor = UIColor.lightGray
 
     private func deactivateCurrentAllColumnsAndConstraints(){
         self.columns.forEach { (c) in
@@ -209,7 +206,7 @@ class ColumnsViewContainer: UIView {
     }
     
     //Exibe as colunas que estavam escondidas anteriormente e esconde as colunas passadas por parametro
-    func hideColumns(_ columns: [Int]) {
+    open func hideColumns(_ columns: [Int]) {
         if columns.count > 0 {
             let columnsToShow = Array<Int>(0..<self.columns.count).filter({!columns.contains($0) && !self.columns[$0].isShowing})
             self.showColumns(columnsToShow)
@@ -218,12 +215,12 @@ class ColumnsViewContainer: UIView {
     }
     
     //Exibe as colunas passadas por parametro
-    func showColumns(_ columns: [Int]) {
+    open func showColumns(_ columns: [Int]) {
         columns.forEach({self.columns[$0].show()})
     }
     
     //Ativa o modo de cabecalho das colunas
-    func setHeaderMode(_ on: Bool){
+    open func setHeaderMode(_ on: Bool){
         guard let headerDelegate = self.headerDelegate else {return}
         self.backgroundColor = on ? self.headerModeBackgroundColor : self.normalModeBackgroundColor
         var index: Int = 0
@@ -236,7 +233,7 @@ class ColumnsViewContainer: UIView {
     }
     
     //Configura todas as colunas assim que possui uma superview (desta forma, podendo configurar as constraints corretamente)
-    override func didMoveToSuperview() {
+    open override func didMoveToSuperview() {
         super.didMoveToSuperview()
         if let delegate = self.delegate{
             self.setColumnFields(delegate.columnsFields)
@@ -244,13 +241,13 @@ class ColumnsViewContainer: UIView {
     }
     
     //Atualiza o comprimento das constraints conforme o layout atual da tabela.
-    override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         self.updateColumnsWidthConstraints()
     }
     
     //Lida com os casos de constraints quebrada quando o dispositivo gira e altera o layout da tabela de forma drastica.. Longas batalhas ainda serao travadas quanto a isto.
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.verticalSizeClass == .compact &&
             previousTraitCollection?.horizontalSizeClass == .compact &&
