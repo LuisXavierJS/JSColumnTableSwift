@@ -8,31 +8,31 @@
 
 import UIKit
 
-protocol ColumnsViewProtocol: class {
+public protocol ColumnsViewProtocol: class {
     func hideColumns(_ columns: [Int])
     func showColumns(_ columns: [Int])
 }
 
-class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDelegate, ColumnsViewProtocol {
-    let containerView: ColumnsViewContainer = ColumnsViewContainer()
+open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDelegate, ColumnsViewProtocol {
+    open let containerView: ColumnsViewContainer = ColumnsViewContainer()
     
     private lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
         return self.createContainerConstraintsToActivateOnSetup()
     }()
         
-    var columnsFields: [ColumnFieldContent] {
+    open var columnsFields: [ColumnFieldContent] {
         return []
     }
     
-    func hideColumns(_ columns: [Int]){
+    open func hideColumns(_ columns: [Int]){
         self.containerView.hideColumns(columns)
     }
     
-    func showColumns(_ columns: [Int]){
+    open func showColumns(_ columns: [Int]){
         self.containerView.showColumns(columns)
     }
     
-    func setupViews(){
+    open func setupViews(){
         self.containerView.delegate = self
         
         self.containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -50,54 +50,20 @@ class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDeleg
         }
     }
     
-    func createContainerConstraintsToActivateOnSetup() -> [NSLayoutConstraint] {
+    open func createContainerConstraintsToActivateOnSetup() -> [NSLayoutConstraint] {
         var containerConstraints: [NSLayoutConstraint] = []
         containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", metrics: nil, views: ["container":self.containerView]))
         containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", metrics: nil, views: ["container":self.containerView]))
         return containerConstraints
     }
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupViews()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setupViews()
-    }
-}
-
-
-class SpecialColumnsTableViewCell: ColumnsTableViewCell {
-    let atualizar = UISwitch()
-    let nome = UILabel()
-    let novoNome = UITextField()
-    let executar = UIButton()
-    let imagem = UIImageView()
-    
-    override var columnsFields: [ColumnFieldContent] {
-        return [ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
-                ColumnFieldContent(nome, title: "nome"),
-                ColumnFieldContent(novoNome,title: "novoNome", CGSize(width:200,height:30)),
-                ColumnFieldContent(executar,title: "executar", CGSize(width:200,height:50)),
-                ColumnFieldContent(imagem,title:"imagem", CGSize(width: 100, height: 50))]
-    }    
-    
-    func redimensioningScaleForFreeSpace(forColumnAt index: Int) -> CGFloat {
-        return Array<CGFloat>(arrayLiteral: 0,0.5,0.5,0,0)[index]
-    }
-    
-    func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
-        return Array<CGFloat>(arrayLiteral: 60,200,200,200,50)[index]
-    }
-    
-    override func setupViews() {
-        super.setupViews()
-        self.nome.numberOfLines = 0
-        self.nome.lineBreakMode = .byWordWrapping
-        self.novoNome.backgroundColor = UIColor.blue
-        self.executar.backgroundColor = UIColor.cyan
-        self.imagem.backgroundColor = UIColor.magenta
     }
 }
