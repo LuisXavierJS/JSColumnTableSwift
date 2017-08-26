@@ -27,3 +27,33 @@ public extension UITableViewCell{
         return view as? UITableView
     }
 }
+
+extension NSObject {
+    public class func className() -> String {
+        let moduleClassName = NSStringFromClass(self.classForCoder())
+        let className = moduleClassName.components(separatedBy: ".").last!
+        return className
+    }
+    
+    func findNext(type: AnyClass) -> Any{
+        var resp = self as! UIResponder
+        while !resp.isKind(of: type.self) && resp.next != nil {
+            resp = resp.next!
+        }
+        return resp
+    }
+}
+
+extension ColumnsTableView {
+    func registerCellAndHeader<CellType: ColumnsTableViewCell>(forCellType type: CellType.Type) {
+        self.register(CellType.self, forCellReuseIdentifier: CellType.className())
+        self.register(ColumnsHeaderView<CellType>.self, forHeaderFooterViewReuseIdentifier: ColumnsHeaderView<CellType>.className())
+    }
+}
+
+extension UITableView {
+    func setDataSourceAndDelegate(_ datasource: (UITableViewDelegate&UITableViewDataSource)?){
+        self.dataSource = datasource
+        self.delegate = datasource
+    }
+}

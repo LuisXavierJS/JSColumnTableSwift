@@ -50,7 +50,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "PrototypeCell", for: indexPath) as! SpecialColumnsTableViewCell
         cell.contentView.backgroundColor = colors[indexPath.section][indexPath.row]
         cell.nome.text = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis "
-        cell.selectionStyle = .none
         return cell
     }
     
