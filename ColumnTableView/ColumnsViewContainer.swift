@@ -55,6 +55,11 @@ open class ColumnsViewContainer: UIView {
     open var normalModeBackgroundColor: UIColor = UIColor.clear
     open var headerModeBackgroundColor: UIColor = UIColor.lightGray
 
+    deinit {
+        self.mainColumn?.removeFromSuperview()
+        self.columns.removeAll()
+    }
+    
     private func deactivateCurrentAllColumnsAndConstraints(){
         self.columns.forEach { (c) in
             NSLayoutConstraint.deactivate(c.constraints)
@@ -245,20 +250,5 @@ open class ColumnsViewContainer: UIView {
         super.layoutSubviews()
         self.updateColumnsWidthConstraints()
     }
-    
-    //Lida com os casos de constraints quebrada quando o dispositivo gira e altera o layout da tabela de forma drastica.. Longas batalhas ainda serao travadas quanto a isto.
-    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if previousTraitCollection?.verticalSizeClass == .compact &&
-            previousTraitCollection?.horizontalSizeClass == .compact &&
-            self.traitCollection.verticalSizeClass == .regular,
-            let constraint = self.mainColumn?.widthConstraint {
-                NSLayoutConstraint.deactivate([constraint])
-        }else{
-            if let constraint = self.mainColumn?.widthConstraint {
-                NSLayoutConstraint.activateIfNotActive([constraint])
-            }
-        }
-    }
-
+   
 }

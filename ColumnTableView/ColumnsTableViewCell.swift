@@ -24,6 +24,10 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
         return []
     }
     
+    deinit {
+        self.containerView.removeFromSuperview()
+    }
+    
     open func hideColumns(_ columns: [Int]){
         self.containerView.hideColumns(columns)
     }

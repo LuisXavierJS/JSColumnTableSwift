@@ -15,6 +15,10 @@ open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterVie
         return self.columnsViewContainerCell.containerView
     }
     
+    deinit {
+        self.columnsViewContainer?.removeFromSuperview()        
+    }
+    
     public override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         self.setupViews()

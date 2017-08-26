@@ -25,6 +25,10 @@ open class ColumnFieldContent: NSObject {
         self.preferredSizeOfField = preferredSize
         super.init()
     }
+    
+    deinit {
+        self.field?.removeFromSuperview()
+    }
 }
 
 open class ColumnContentView: UIView {
@@ -48,6 +52,12 @@ open class ColumnContentView: UIView {
         didSet{
             self.updateHeaderTitleFont()
         }
+    }
+    
+    deinit {
+        self.headerTitle?.removeFromSuperview()
+        self.rightSeparator?.removeFromSuperview()
+        self.leftSeparator?.removeFromSuperview()
     }
     
     private lazy var headerTitleConstraints: [NSLayoutConstraint] = {
