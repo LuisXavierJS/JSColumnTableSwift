@@ -9,24 +9,55 @@
 import UIKit
 
 
-@objc protocol SetupableCellProtocol: class {
-    func setup(_ object: NSObject)
+protocol SetupableCellProtocol: class {
+    associatedtype DataType
+    func setup(_ object: DataType)
 }
 
-class GenericTableDatasource<DataType: NSObject, CellType: ColumnsTableViewCell>: NSObject, UITableViewDataSource, UITableViewDelegate {
-    fileprivate(set) var items: [DataType]!
+class GenericTableController<CellType: SetupableCellProtocol>: NSObject, UITableViewDataSource, UITableViewDelegate where CellType: UITableViewCell {
+    typealias DataType = CellType.DataType
+    var items: [[DataType]] = []
     fileprivate(set) weak var tableView: ColumnsTableView?
+    
     var cellIdentifier: String {
         return CellType.className()
     }
+    
+    init(tableView: ColumnsTableView){
+        self.tableView = tableView
+        super.init()
+    }
+    
+    func reloadData(with items: [[DataType]]) {
+        self.items = items
+        self.tableView?.reloadData()
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.items.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.items[section].count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier,
+                                                 for: indexPath) as! CellType
+        cell.setup(self.items[indexPath.section][indexPath.row])
+        return cell
+    }
+    
+}
+
+class GenericColumnsTableController<CellType: SetupableCellProtocol>: GenericTableController<CellType> where CellType: ColumnsTableViewCell {
     
     var headerIdentifier: String {
         return ColumnsHeaderView<CellType>.className()
     }
     
-    init(tableView: ColumnsTableView, mockMode: Bool = false){
-        self.tableView = tableView
-        super.init()
+    override init(tableView: ColumnsTableView) {
+        super.init(tableView: tableView)
         self.register()
     }
     
@@ -34,22 +65,9 @@ class GenericTableDatasource<DataType: NSObject, CellType: ColumnsTableViewCell>
         self.tableView?.registerCellAndHeader(forCellType: CellType.self)
     }
     
-    func setItems(items: [Any]) {
-        self.items = items as! [DataType]
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.items?.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier,
-                                                 for: indexPath) as! SetupableCellProtocol
-        cell.setup(self.items[indexPath.row])
-        return cell as! UITableViewCell
-    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: headerIdentifier)
     }
 }
+
