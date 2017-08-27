@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SpecialColumnsTableViewCell: ColumnsTableViewCell, SetupableCellProtocol {
+class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol {
     typealias DataType = UIColor
     let atualizar = UISwitch()
     let nome = UILabel()

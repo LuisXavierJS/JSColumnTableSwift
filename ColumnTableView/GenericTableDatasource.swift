@@ -9,7 +9,7 @@
 import UIKit
 
 
-protocol SetupableCellProtocol: class {
+protocol JSSetupableCellProtocol: class {
     associatedtype DataType
     func setup(_ object: DataType)
 }
@@ -107,7 +107,7 @@ class JSTableViewDelegateDatasource: NSObject, UITableViewDataSource, UITableVie
     }
 }
 
-class JSGenericTableController<CellType: SetupableCellProtocol>: NSObject, JSTableViewControllerProtocol where CellType: UITableViewCell {
+class JSGenericTableController<CellType: JSSetupableCellProtocol>: NSObject, JSTableViewControllerProtocol where CellType: UITableViewCell {
     typealias DataType = CellType.DataType
     
     var items: [[DataType]] = []
@@ -150,7 +150,7 @@ class JSGenericTableController<CellType: SetupableCellProtocol>: NSObject, JSTab
     
 }
 
-class JSGenericColumnsTableController<CellType: SetupableCellProtocol>: JSGenericTableController<CellType> where CellType: ColumnsTableViewCell {
+class JSGenericColumnsTableController<CellType: JSSetupableCellProtocol>: JSGenericTableController<CellType> where CellType: ColumnsTableViewCell {
     var headerIdentifier: String {
         return ColumnsHeaderView<CellType>.className()
     }
