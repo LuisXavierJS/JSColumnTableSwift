@@ -17,13 +17,13 @@ protocol SetupableCellProtocol: class {
 class GenericTableController<CellType: SetupableCellProtocol>: NSObject, UITableViewDataSource, UITableViewDelegate where CellType: UITableViewCell {
     typealias DataType = CellType.DataType
     var items: [[DataType]] = []
-    fileprivate(set) weak var tableView: ColumnsTableView?
+    fileprivate(set) weak var tableView: UITableView?
     
     var cellIdentifier: String {
         return CellType.className()
     }
     
-    init(tableView: ColumnsTableView){
+    init<T:UITableView>(tableView: T){
         self.tableView = tableView
         super.init()
     }
@@ -48,26 +48,38 @@ class GenericTableController<CellType: SetupableCellProtocol>: NSObject, UITable
         return cell
     }
     
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        print("hey yah")
+//    }
+    
 }
 
 class GenericColumnsTableController<CellType: SetupableCellProtocol>: GenericTableController<CellType> where CellType: ColumnsTableViewCell {
-    
     var headerIdentifier: String {
         return ColumnsHeaderView<CellType>.className()
     }
     
-    override init(tableView: ColumnsTableView) {
+    weak var columnsTableView: ColumnsTableView? {
+        return self.tableView as? ColumnsTableView
+    }
+    
+    override init<T:UITableView>(tableView: T) where T:ColumnsTableView {
         super.init(tableView: tableView)
         self.register()
     }
     
     func register(){
-        self.tableView?.registerCellAndHeader(forCellType: CellType.self)
+        self.columnsTableView?.registerCellAndHeader(forCellType: CellType.self)
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: headerIdentifier)
     }
+    
+
 }
 

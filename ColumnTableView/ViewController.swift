@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableDatasource = SpecialColumnsDatasource(tableView: self.tableView)
+        self.tableDatasource = SpecialColumnsDatasource(columnsTableView: self.tableView)
     }
 
 }
