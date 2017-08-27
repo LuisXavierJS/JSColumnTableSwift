@@ -14,7 +14,7 @@ class SpecialColumnsDatasource: GenericColumnsTableController<SpecialColumnsTabl
     init(columnsTableView: ColumnsTableView) {
         super.init(tableView: columnsTableView)
         self.items = colors
-        self.tableView?.setDataSourceAndDelegate(self)
+        self.tableView?.setDataSourceAndDelegate(self.controller)
         self.tableView?.reloadData()
     }
     
@@ -28,7 +28,7 @@ class SpecialColumnsDatasource: GenericColumnsTableController<SpecialColumnsTabl
         return indexPath
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        super.tableView(tableView, didSelectRowAt: indexPath)
         print("ola")
     }
