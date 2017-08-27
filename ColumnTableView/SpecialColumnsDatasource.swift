@@ -23,13 +23,11 @@ class SpecialColumnsDatasource: GenericColumnsTableController<SpecialColumnsTabl
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-//        super.tableView(tableView, willSelectRowAt: indexPath)
         print("dola")
         return indexPath
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        super.tableView(tableView, didSelectRowAt: indexPath)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("ola")
     }
 }

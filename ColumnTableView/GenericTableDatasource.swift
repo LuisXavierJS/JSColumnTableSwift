@@ -15,32 +15,86 @@ protocol SetupableCellProtocol: class {
 }
 
 @objc protocol TableViewControllerProtocol: class {
-    var cellIdentifier: String {get}
-    func didDequeue(of cell: UITableViewCell, ofIndexPath index: IndexPath)
-    @objc optional func didSelectCell(at index: IndexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    
+    @objc optional func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
+    @objc optional func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    @objc optional func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
+    @objc optional func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    
+    @objc optional func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath)
 }
 
 fileprivate class TableViewController: NSObject, UITableViewDataSource, UITableViewDelegate {
     fileprivate var items: [[Any]] = []
     weak var delegate: TableViewControllerProtocol!
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return self.items.count
-    }
     
+    var defaultRowHeight: CGFloat = 44
+    var defaultHeaderHeight: CGFloat = -1
+
+    
+    //MARK : REQUIRED METHODS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.items[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: delegate.cellIdentifier,
-                                                 for: indexPath)
-        delegate.didDequeue(of: cell, ofIndexPath: indexPath)
-        return cell
+        return self.delegate.tableView(tableView,cellForRowAt:indexPath)
     }
     
+    
+    //MARK : OPTIONAL METHODS WITH RETURN
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.items.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if let m = self.delegate.tableView(_:heightForHeaderInSection:) {
+            return m(tableView, section)
+        }else{
+            return self.defaultHeaderHeight
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if let m = self.delegate.tableView(_:viewForHeaderInSection:) {
+            return m(tableView, section)
+        }else{
+            return nil
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if let m = self.delegate.tableView(_:willSelectRowAt:) {
+            return m(tableView, indexPath)
+        }else{
+            return indexPath
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let m = self.delegate.tableView(_:heightForRowAt:) {
+            return m(tableView, indexPath)
+        }else{
+            return self.defaultRowHeight
+        }
+    }
+    
+    
+    //MARK : OPTIONAL METHODS WITHOUT RETURN
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.delegate.didSelectCell?(at: indexPath)
+        self.delegate.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        self.delegate.tableView?(tableView, didDeselectRowAt: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
+        self.delegate.tableView?(tableView, didHighlightRowAt: indexPath)
     }
 }
 
@@ -71,22 +125,12 @@ class GenericTableController<CellType: SetupableCellProtocol>: NSObject, TableVi
         self.items = items
         self.tableView?.reloadData()
     }
-    
-    func didDequeue(of cell: UITableViewCell, ofIndexPath index: IndexPath) {
-        if let setupableCell = cell as? CellType {
-            setupableCell.setup(self.items[index.section][index.row])
-        }
-    }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier,
                                                  for: indexPath) as! CellType
         cell.setup(self.items[indexPath.section][indexPath.row])
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("hey yah")
     }
     
 }
