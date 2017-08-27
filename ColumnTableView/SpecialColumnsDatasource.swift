@@ -14,17 +14,8 @@ class SpecialColumnsDatasource: JSGenericColumnsTableController<SpecialColumnsTa
     init(columnsTableView: ColumnsTableView) {
         super.init(tableView: columnsTableView)
         self.items = colors
-        self.tableView?.setDataSourceAndDelegate(self.controller)
+        self.tableView?.setDataSourceAndDelegate(self.delegateDatasource)
         self.tableView?.reloadData()
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        print("WHAT!")
-    }
-    
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        print("dola")
-        return indexPath
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

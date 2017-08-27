@@ -15,6 +15,8 @@ protocol SetupableCellProtocol: class {
 }
 
 @objc protocol JSTableViewControllerProtocol: class {
+    func numberOfSections(in tableView: UITableView) -> Int
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     
     @objc optional func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
@@ -49,186 +51,71 @@ protocol SetupableCellProtocol: class {
     @objc optional func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath)
     @objc optional func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     @objc optional func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator)
+    @objc optional func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?)
+    @objc optional func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int)
+    @objc optional func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
+    @objc optional func tableView(_ tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int)
+    @objc optional func tableView(_ tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int)
+    @objc optional func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    @objc optional func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?)
 }
 
-fileprivate class JSTableViewController: NSObject, UITableViewDataSource, UITableViewDelegate {
-    fileprivate var items: [[Any]] = []
+class JSTableViewDelegateDatasource: NSObject, UITableViewDataSource, UITableViewDelegate {
     weak var delegate: JSTableViewControllerProtocol!
     
+    //MARK: REQUIRED METHODS
     
-    var defaultRowHeight: CGFloat = 44
-    var defaultHeaderHeight: CGFloat = -1
-
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.delegate.numberOfSections(in:tableView)
+    }
     
-    //MARK : REQUIRED METHODS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.items[section].count
+        return self.delegate.tableView(tableView,numberOfRowsInSection:section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return self.delegate.tableView(tableView,cellForRowAt:indexPath)
     }
     
+    //MARK: OPTIONAL METHODS
     
-    //MARK : OPTIONAL METHODS WITH RETURN
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return self.items.count
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return self.delegate.tableView?(tableView,viewForHeaderInSection:section)
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        <#code#>
+        return self.delegate.tableView?(tableView,viewForFooterInSection:section)
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        <#code#>
+        return self.delegate.tableView?(tableView,editActionsForRowAt:indexPath)
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-        <#code#>
+        return self.delegate.tableView?(tableView,editingStyleForRowAt:indexPath) ?? .none
     }
     
-    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
-        <#code#>
-    }
-    
-    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        <#code#>
-    }
-    
-    func indexPathForPreferredFocusedView(in tableView: UITableView) -> IndexPath? {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, canFocusRowAt indexPath: IndexPath) -> Bool {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        if let m = self.delegate.tableView(_:shouldHighlightRowAt:) {return m(tableView, indexPath)}
-        else{return true}
-    }
-    
-    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        if let m = self.delegate.tableView(_:shouldIndentWhileEditingRowAt:) {return m(tableView, indexPath)}
-        else{return true}
-    }
-    
-    func tableView(_ tableView: UITableView, shouldUpdateFocusIn context: UITableViewFocusUpdateContext) -> Bool {
-        if let m = self.delegate.tableView(_:shouldUpdateFocusIn:) {return m(tableView, context)}
-        else{return tableView.shouldUpdateFocus(in: context)}
-    }
-    
-    func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if let m = self.delegate.tableView(_:heightForHeaderInSection:) {return m(tableView, section)}
-        else{return self.defaultHeaderHeight}
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if let m = self.delegate.tableView(_:viewForHeaderInSection:) {
-            return m(tableView, section)
-        }else{
-            return nil
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if let m = self.delegate.tableView(_:willSelectRowAt:) {
-            return m(tableView, indexPath)
-        }else{
-            return indexPath
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let m = self.delegate.tableView(_:heightForRowAt:) {
-            return m(tableView, indexPath)
-        }else{
-            return self.defaultRowHeight
-        }
-    }
-    
-    
-    //MARK : OPTIONAL METHODS WITHOUT RETURN
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.delegate.tableView?(tableView, didSelectRowAt: indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        self.delegate.tableView?(tableView, didDeselectRowAt: indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
-        self.delegate.tableView?(tableView, didHighlightRowAt: indexPath)
     }
 }
 
 class JSGenericTableController<CellType: SetupableCellProtocol>: NSObject, JSTableViewControllerProtocol where CellType: UITableViewCell {
     typealias DataType = CellType.DataType
-    var items: [[DataType]] = [] {
-        didSet{
-            self.tableController.items = self.items
-        }
-    }
-    weak var controller: (UITableViewDelegate&UITableViewDataSource)! {
-        return self.tableController
-    }
-    private var tableController = JSTableViewController()
+    
+    var items: [[DataType]] = []
+    
+    lazy var delegateDatasource: JSTableViewDelegateDatasource = {
+        return JSTableViewDelegateDatasource()
+    }()
+    
     fileprivate(set) weak var tableView: UITableView?
     
     var cellIdentifier: String {
@@ -238,12 +125,20 @@ class JSGenericTableController<CellType: SetupableCellProtocol>: NSObject, JSTab
     init<T:UITableView>(tableView: T){
         self.tableView = tableView
         super.init()
-        self.tableController.delegate = self
+        self.delegateDatasource.delegate = self
     }
     
     func reloadData(with items: [[DataType]]) {
         self.items = items
         self.tableView?.reloadData()
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.items.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.items[section].count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -267,19 +162,16 @@ class JSGenericColumnsTableController<CellType: SetupableCellProtocol>: JSGeneri
     override init<T:UITableView>(tableView: T) where T:ColumnsTableView {
         super.init(tableView: tableView)
         self.register()
+        self.tableView?.sectionHeaderHeight = 40
+        self.tableView?.estimatedSectionHeaderHeight = 40
     }
     
     func register(){
         self.columnsTableView?.registerCellAndHeader(forCellType: CellType.self)
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
-    }
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: headerIdentifier)
     }
     
-
 }
