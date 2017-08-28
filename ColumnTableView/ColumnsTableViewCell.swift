@@ -35,19 +35,6 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
     open func setupViews(){
         self.containerView.delegate = self
         
-        self.containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.setContainerConstraintsIfNeeded()
-    }
-    
-    private func setContainerConstraintsIfNeeded(){
-        let needsSetConstraints = self.reuseIdentifier != nil
-        
-        if needsSetConstraints{
-            self.contentView.addSubview(self.containerView)
-            
-            NSLayoutConstraint.activateIfNotActive(self.containerConstraintsToActivateOnSetup)
-        }
     }
     
     open func createContainerConstraintsToActivateOnSetup() -> [NSLayoutConstraint] {

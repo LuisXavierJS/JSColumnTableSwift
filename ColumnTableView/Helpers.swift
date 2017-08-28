@@ -9,14 +9,6 @@
 import Foundation
 import UIKit
 
-public extension NSLayoutConstraint {
-    public class func activateIfNotActive(_ constraints: [NSLayoutConstraint]){
-        let notActive = constraints.filter({!$0.isActive})
-        self.activate(notActive)
-    }
-}
-
-
 public extension UITableViewCell{
     public weak var tableView: UITableView? {
         var view: UIView? = self

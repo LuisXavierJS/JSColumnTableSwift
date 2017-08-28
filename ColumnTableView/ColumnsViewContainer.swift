@@ -54,68 +54,6 @@ open class ColumnsViewContainer: UIView {
     
     open var normalModeBackgroundColor: UIColor = UIColor.clear
     open var headerModeBackgroundColor: UIColor = UIColor.lightGray
-
-    private func deactivateCurrentAllColumnsAndConstraints(){
-        self.columns.forEach { (c) in
-            NSLayoutConstraint.deactivate(c.constraints)
-            c.removeFromSuperview()
-        }
-        NSLayoutConstraint.deactivate(self.constraints)
-    }
-    
-    //Atribuindo as constraints de trailing, leading, top e bottom para todas as colunas, exceto o trailing ultima
-    private func setEdgeConstraints(rightCollumn: ColumnContentView?, leftColumn: ColumnContentView){
-        let isFirstColumn = rightCollumn == nil
-        
-        let horizontalViews = isFirstColumn ? ["column":leftColumn] : ["rightCollumn":rightCollumn!,"column":leftColumn]
-        let rightView = (isFirstColumn ? "|" : "[rightCollumn]")
-        let horizontalDimensionFormat = "H:" + rightView + "[column]"
-        
-        var constraintsToActivate: [NSLayoutConstraint] = []
-        constraintsToActivate.append(contentsOf:NSLayoutConstraint.constraints(withVisualFormat: horizontalDimensionFormat,
-                                                                               metrics: nil,
-                                                                               views: horizontalViews))
-        constraintsToActivate.append(contentsOf:NSLayoutConstraint.constraints(withVisualFormat: "V:|[column]|",
-                                                                               metrics: nil,
-                                                                               views: ["column":leftColumn]))
-        
-        NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
-    }
-    
-    //Atribuindo as constraints de trailing para a ultima coluna, e chamando o metodo para atribuir para as demais colunas.
-    private func createAndSetColumnsEdgesConstraints(){
-        var lastColumn: ColumnContentView?
-        self.columns.forEach { (column) in
-            self.setEdgeConstraints(rightCollumn: lastColumn, leftColumn: column)
-            lastColumn = column
-        }
-        if let column = lastColumn {
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "[column]|",
-                                                                       metrics: nil,
-                                                                       views: ["column":column]))
-        }
-    }
-    
-    //Criando as constraints de largura fixa para todas as colunas, exceto a coluna principal (que possui largura variavel)
-    private func createAndSetColumnsWidthConstraints(){
-        var constraintsToActivate: [NSLayoutConstraint] = []
-        let widthDefinitions = self.getWidthDefinitionsOfColumns()
-        let mainColumnIndex = self.delegate?.mainColumnIndex ?? widthDefinitions.sorted(by: {$0.preferredWidth > $1.preferredWidth}).first?.column ?? 0
-        self.mainColumn = self.columns[mainColumnIndex]
-        widthDefinitions.forEach { (columnIndex,width,_) in
-            let relation: NSLayoutRelation = columnIndex == mainColumnIndex ? .greaterThanOrEqual : .equal
-            let constraint = NSLayoutConstraint(item: self.columns[columnIndex],
-                                                attribute: .width,
-                                                relatedBy: relation,
-                                                toItem: nil,
-                                                attribute: .notAnAttribute,
-                                                multiplier: 1,
-                                                constant: width)
-            constraintsToActivate.append(constraint)
-            self.columns[columnIndex].setWidth(constraint: constraint)
-        }
-        NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
-    }
     
     //Calculando as definicoes de comprimento calculados (com base na sugestao do delegate) e sugeridos pelo delegate (o delegate pode sugerir muita merda haha) de cada coluna.
     private func getWidthDefinitionsOfColumns() -> [(column: Int, width: CGFloat, preferredWidth: CGFloat)]{
@@ -193,14 +131,11 @@ open class ColumnsViewContainer: UIView {
     private func setupAllColumns(){
         if self.columns.count > 0 {
             self.columns.forEach({self.addSubview($0)})
-            self.createAndSetColumnsEdgesConstraints()
-            self.createAndSetColumnsWidthConstraints()
         }
     }
     
     //Resetando as colunas atuais e atribuindo novas colunas.
     private func setColumnFields(_ columns: [ColumnFieldContent]) {
-        self.deactivateCurrentAllColumnsAndConstraints()
         self.columns = columns.map({return ColumnContentView(withField: $0)})
         self.setupAllColumns()
     }
@@ -244,21 +179,6 @@ open class ColumnsViewContainer: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
         self.updateColumnsWidthConstraints()
-    }
-    
-    //Lida com os casos de constraints quebrada quando o dispositivo gira e altera o layout da tabela de forma drastica.. Longas batalhas ainda serao travadas quanto a isto.
-    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if previousTraitCollection?.verticalSizeClass == .compact &&
-            previousTraitCollection?.horizontalSizeClass == .compact &&
-            self.traitCollection.verticalSizeClass == .regular,
-            let constraint = self.mainColumn?.widthConstraint {
-                NSLayoutConstraint.deactivate([constraint])
-        }else{
-            if let constraint = self.mainColumn?.widthConstraint {
-                NSLayoutConstraint.activateIfNotActive([constraint])
-            }
-        }
     }
 
 }
