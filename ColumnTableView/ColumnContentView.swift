@@ -151,7 +151,6 @@ open class ColumnContentView: UIView {
         self.showingModeWidth = width
         if self.isShowing {
             self.frame = self.frame.with(width: width)
-            self.setNeedsLayout()
         }
     }
     

@@ -183,9 +183,18 @@ open class ColumnsViewContainer: UIView {
     //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
     func calculateSubviewsFrames(for base: CGRect){
         let widthDefinitions = self.getWidthDefinitionsOfColumns(for: base)
+
         self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(for: base))
+        
+        func lastColumnMaxX(current index: Int) -> CGFloat {
+            return index > 0 ? widthDefinitions[index].calculatedWidth : 0
+        }
+        
         widthDefinitions.forEach { (columnIndex,width,_) in
             self.columns[columnIndex].updateShowingModeWidth(width+self.spaceVariations[columnIndex])
+            self.columns[columnIndex].frame = self.columns[columnIndex].frame
+                .with(x: lastColumnMaxX(current: columnIndex) + 1)
+                .with(height: self.bounds.height)
         }
     }
     
