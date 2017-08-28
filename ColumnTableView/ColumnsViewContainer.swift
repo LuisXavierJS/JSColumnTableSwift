@@ -89,7 +89,8 @@ open class ColumnsViewContainer: UIView {
     //Calculando a distribuicao de espaco livre na linha para todas as colunas visiveis (nessa hora que o delegate pode informar prioridades erradas e bugar a visualizacao do esquema..)
     private func redistributeSpaceOfColumns(forSpaceVariation space: CGFloat){
         var totalSpace: CGFloat = 0
-        for columnIndex in 0..<self.columns.count {
+        let showingColumnsNumber = (self.columns.filter({$0.isShowing}).count)
+        self.columns.enumerated().forEach { (columnIndex,column) in
             self.spaceVariations[columnIndex] = 0
             if self.columns[columnIndex].isShowing {
                 if let priorityForColumn = self.delegate?.redimensioningScaleForFreeSpace?(forColumnAt: columnIndex),
@@ -98,8 +99,7 @@ open class ColumnsViewContainer: UIView {
                     totalSpace+=variation
                     self.spaceVariations[columnIndex]+=variation
                 }else{
-                    let showingColumns = (self.columns.filter({$0.isShowing}).count)
-                    let variation = (space * (1/CGFloat(showingColumns)))
+                    let variation = (space * (1/CGFloat(showingColumnsNumber)))
                     if variation + totalSpace >= space {
                         self.spaceVariations[columnIndex]+=(space - totalSpace)
                     }else{
