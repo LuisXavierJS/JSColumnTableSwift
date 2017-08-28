@@ -26,20 +26,27 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol
         ]
     }
     
-    func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
-        return Array<CGFloat>(arrayLiteral: 400,200,200,200,50)[index]
-    }
+//    func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
+//        return Array<CGFloat>(arrayLiteral: 400,200,200,200,50)[index]
+//    }
 //    
     override func setupViews() {
         super.setupViews()
-        self.nome.backgroundColor = UIColor.green
-        self.another.backgroundColor = UIColor.blue
-        self.executar.backgroundColor = UIColor.cyan
+//        self.nome.backgroundColor = UIColor.green
+//        self.another.backgroundColor = UIColor.blue
+//        self.executar.backgroundColor = UIColor.cyan
+        self.nome.text = "RAPAAAZIAAADAA"
+        self.another.text = "COEEEEEEH"
         self.executar.setTitle("COÉ RAPAZIADA", for: .normal)
+        self.executar.layer.borderColor = UIColor.generateRandomColor().cgColor
+        self.executar.backgroundColor = UIColor.white
+        self.executar.setTitleColor(UIColor.generateRandomColor(), for: .normal)
+        self.executar.layer.borderWidth = 1
+        self.executar.layer.cornerRadius = 5
 //        self.imagem.backgroundColor = UIColor.magenta
     }
     
     func setup(_ object: UIColor) {
-        self.contentView.backgroundColor = object
+//        self.contentView.backgroundColor = object
     }
 }

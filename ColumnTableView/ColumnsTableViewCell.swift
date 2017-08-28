@@ -32,7 +32,6 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
     
     open func setupViews(){
         self.containerView.delegate = self
-        containerView.backgroundColor = UIColor.red
         self.contentView.addSubview(containerView)
     }
    
