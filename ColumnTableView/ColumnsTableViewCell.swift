@@ -15,6 +15,7 @@ public protocol ColumnsViewProtocol: class {
 
 open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDelegate, ColumnsViewProtocol {
     private var lastLayoutedBounds: CGRect = CGRect.zero
+
     open let containerView: ColumnsViewContainer = ColumnsViewContainer()
     
     open var columnsFields: [ColumnFieldContent] {
@@ -31,6 +32,8 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
     
     open func setupViews(){
         self.containerView.delegate = self
+        containerView.backgroundColor = UIColor.red
+        self.addSubview(containerView)
     }
    
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -43,10 +46,18 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
         self.setupViews()
     }
     
+    func calculateSubviewsFrames(for base: CGRect){
+        self.containerView.frame = base
+    }
+    
+    func baseSubviewsArea() -> CGRect {
+        return self.bounds
+    }
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         if self.lastLayoutedBounds != self.bounds {
-            print("CELL BOUNDS CHANGED!")
+            self.calculateSubviewsFrames(for: self.baseSubviewsArea())
         }
         self.lastLayoutedBounds = self.bounds
     }

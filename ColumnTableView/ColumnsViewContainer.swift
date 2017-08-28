@@ -42,6 +42,9 @@ import UIKit
 }
 
 open class ColumnsViewContainer: UIView {
+    private var lastLayoutedBounds: CGRect = CGRect.zero
+
+    
     open private(set) weak var mainColumn: ColumnContentView?
     open private(set) var columns: [ColumnContentView] = []
     
@@ -56,27 +59,30 @@ open class ColumnsViewContainer: UIView {
     open var headerModeBackgroundColor: UIColor = UIColor.lightGray
     
     //Calculando as definicoes de comprimento calculados (com base na sugestao do delegate) e sugeridos pelo delegate (o delegate pode sugerir muita merda haha) de cada coluna.
-    private func getWidthDefinitionsOfColumns() -> [(column: Int, width: CGFloat, preferredWidth: CGFloat)]{
-        var widthDefinitions: [(column: Int, width: CGFloat, preferredWidth: CGFloat)] = []
-        var index = 0
+    //Default base = self.bounds
+    private func getWidthDefinitionsOfColumns(for base: CGRect) -> [(column: Int, calculatedWidth: CGFloat, preferredWidth: CGFloat)]{
+        let defaultColumnWidth = rint(base.width/CGFloat(self.columns.count))
+        
+        var widthDefinitions: [(column: Int, calculatedWidth: CGFloat, preferredWidth: CGFloat)] = []
         var totalColumnsWidth: CGFloat = 0
-        self.columns.forEach { _ in
-            var calculatedPreferredWidth: CGFloat = 0
-            var preferred: CGFloat = 0
-            var width: CGFloat = 0
+        
+        self.columns.enumerated().forEach { (index,column) in
+            let widthLimitOfColumn = max(base.width - totalColumnsWidth,0)
+            var calculatedWidth: CGFloat = defaultColumnWidth
+            var preferredWidth: CGFloat = defaultColumnWidth
+            
             if let preferredRelativeWidth = self.delegate?.preferredRelativeWidth?(forColumnAt: index){
-                preferred = preferredRelativeWidth
-                calculatedPreferredWidth = preferredRelativeWidth * self.bounds.width
-            }else{
-                let delegatePreferredWidth = self.delegate?.preferredInitialFixedWidth?(forColumnAt: index)
-                calculatedPreferredWidth = delegatePreferredWidth ?? self.bounds.width/CGFloat(self.columns.count)
-                preferred = calculatedPreferredWidth
+                preferredWidth = preferredRelativeWidth
+                calculatedWidth = min(base.width * preferredWidth,widthLimitOfColumn)
+            }else if let preferredFixedWidth = self.delegate?.preferredInitialFixedWidth?(forColumnAt: index){
+                preferredWidth = preferredFixedWidth
+                calculatedWidth =  min(preferredWidth,widthLimitOfColumn)
             }
-            width = min(calculatedPreferredWidth, max(self.bounds.width - totalColumnsWidth,0))
-            widthDefinitions.append((column: index, width: width, preferredWidth: preferred))
-            totalColumnsWidth+=width
-            index+=1
+            
+            widthDefinitions.append((column: index, calculatedWidth: calculatedWidth, preferredWidth: preferredWidth))
+            totalColumnsWidth+=calculatedWidth
         }
+
         return widthDefinitions
     }
     
@@ -105,26 +111,17 @@ open class ColumnsViewContainer: UIView {
     }
     
     //Calculando o espaco livre de uma linha.
-    private func calculateSpaceVariation() -> CGFloat{
+    private func calculateSpaceVariation(for base: CGRect) -> CGFloat{
         var spaceVariation: CGFloat = 0
         self.columns.filter({!$0.isShowing}).forEach({spaceVariation+=$0.showingModeWidth})
         if spaceVariation == 0 {
-            self.getWidthDefinitionsOfColumns().forEach({ (columnIndex,width,_) in
+            self.getWidthDefinitionsOfColumns(for: base).forEach({ (columnIndex,width,_) in
                 if !self.columns[columnIndex].isShowing {
                     spaceVariation+=width
                 }
             })
         }
         return spaceVariation
-    }
-    
-    //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
-    private func updateColumnsWidthConstraints(){
-        let widthDefinitions = self.getWidthDefinitionsOfColumns()
-        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation())
-        widthDefinitions.forEach { (columnIndex,width,_) in
-            self.columns[columnIndex].updateShowingModeWidth(width+self.spaceVariations[columnIndex])
-        }
     }
     
     //Configurando todas as colunas, e escondendo as desejadas pelo delegate.
@@ -175,10 +172,26 @@ open class ColumnsViewContainer: UIView {
         }
     }
     
+    //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
+    func calculateSubviewsFrames(for base: CGRect){
+        let widthDefinitions = self.getWidthDefinitionsOfColumns(for: base)
+        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(for: base))
+        widthDefinitions.forEach { (columnIndex,width,_) in
+            self.columns[columnIndex].updateShowingModeWidth(width+self.spaceVariations[columnIndex])
+        }
+    }
+    
+    func baseSubviewsArea() -> CGRect {
+        return self.bounds
+    }
+    
     //Atualiza o comprimento das constraints conforme o layout atual da tabela.
     open override func layoutSubviews() {
         super.layoutSubviews()
-        self.updateColumnsWidthConstraints()
+        if self.lastLayoutedBounds != self.bounds {
+            self.calculateSubviewsFrames(for: self.baseSubviewsArea())
+        }
+        self.lastLayoutedBounds = self.bounds
     }
 
 }
