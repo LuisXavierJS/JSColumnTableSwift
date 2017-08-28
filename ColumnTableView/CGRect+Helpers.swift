@@ -8,45 +8,62 @@
 
 import UIKit
 
-enum CGRectAlignment {
-    case verticallyCentralized
-    case horizontallyCentralized
+public enum CGRectAlignment {
+    case verticallyCentralized(addendum: CGFloat)
+    case horizontallyCentralized(addendum: CGFloat)
+    case top(addendum: CGFloat)
+    case bottom(addendum: CGFloat)
+    case left(addendum: CGFloat)
+    case right(addendum: CGFloat)
 }
 
 extension CGRect {
-    func insetBy(lX: CGFloat = 0, rX: CGFloat = 0, tY: CGFloat = 0, bY: CGFloat = 0) -> CGRect {
+    
+    func insetBy(left: CGFloat = 0, right: CGFloat = 0, top: CGFloat = 0, bottom: CGFloat = 0) -> CGRect {
         return self
-            .with(x: self.origin.x + lX)
-            .with(width: self.size.width - rX)
-            .with(y: self.origin.y + tY)
-            .with(height: self.size.height - bY)
+            .with(x: self.origin.x + left)
+            .with(width: self.size.width - right)
+            .with(y: self.origin.y + top)
+            .with(height: self.size.height - bottom)
     }
+    
     func aligned(_ alignments: [CGRectAlignment], in rect: CGRect) -> CGRect {
         var aligned = self
         for align in alignments {
             switch align {
-            case .verticallyCentralized:
-                aligned = aligned.with(x: (rect.width/2) - (aligned.width/2))
-            break
-            case .horizontallyCentralized:
-                aligned = aligned.with(y: (rect.height/2)-(aligned.height/2))
-            break
+            case let .verticallyCentralized(addendum):
+                aligned = aligned.with(y: rect.origin.y + ((rect.height/2) - (aligned.height/2)) + addendum)
+            case let .horizontallyCentralized(addendum):
+                aligned = aligned.with(x: rect.origin.x + ((rect.width/2)-(aligned.width/2)) + addendum)
+            case let .top(addendum):
+                aligned = aligned.with(y: rect.origin.y + addendum)
+            case let .bottom(addendum):
+                aligned = aligned.with(y: rect.maxY - aligned.height + addendum)
+            case let .left(addendum):
+                aligned = aligned.with(x: rect.origin.x + addendum)
+            case let .right(addendum):
+                aligned = aligned.with(x: rect.maxX - aligned.width + addendum)
             }
         }
         return aligned
     }
+    
     func with(size delta: CGSize) -> CGRect {
         return self.with(width: delta.width).with(height: delta.height)
     }
+    
     func with(x delta: CGFloat) -> CGRect {
         return CGRect(x: delta, y: self.origin.y, width: self.size.width, height: self.size.height)
     }
+    
     func with(y delta: CGFloat) -> CGRect {
         return CGRect(x: self.origin.x, y: delta, width: self.size.width, height: self.size.height)
     }
+    
     func with(width delta: CGFloat) -> CGRect {
         return CGRect(x: self.origin.x, y: self.origin.y, width: delta, height: self.size.height)
     }
+    
     func with(height delta: CGFloat) -> CGRect {
         return CGRect(x: self.origin.x, y: self.origin.y, width: self.size.width, height: delta)
     }

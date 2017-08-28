@@ -27,16 +27,30 @@ open class ColumnFieldContent: NSObject {
     }
 }
 
+open class RightSeparationLineView: UIView {}
+open class LeftSeparationLineView: UIView {}
+
+
 open class ColumnContentView: UIView {
+    private var lastLayoutedBounds: CGRect = CGRect.zero
+    
     open private(set) var fieldContent: ColumnFieldContent!
+    
+    open var customSettingsToField: ((UIView)->Void) = ColumnContentView.applyCustomSettings
+    
+    open var fieldFixedRepositioningInsets: UIEdgeInsets?
+    
+    open var fieldRelativeRepositioningInsets: UIEdgeInsets = UIEdgeInsetsMake(0.025, 0.025, 0.025, 0.025)
+    
+    open var fieldFrameAlignments: [CGRectAlignment] = [.horizontallyCentralized(addendum: 0), .verticallyCentralized(addendum:0)]
     
     open private(set) var isShowing: Bool = true
     
     open private(set) var showingModeWidth: CGFloat = 0
     
-    open private(set) weak var rightSeparator: UIView!
+    open private(set) weak var rightSeparator: RightSeparationLineView!
     
-    open private(set) weak var leftSeparator: UIView!
+    open private(set) weak var leftSeparator: LeftSeparationLineView!
     
     open private(set) var headerTitle: UILabel?
     
@@ -61,8 +75,8 @@ open class ColumnContentView: UIView {
     
     private func setupViews(){
         self.clipsToBounds = false
-        let rightLine = UIView()
-        let leftLine = UIView()
+        let rightLine = RightSeparationLineView()
+        let leftLine = LeftSeparationLineView()
         
         rightLine.backgroundColor = UIColor.black
         leftLine.backgroundColor = UIColor.black
@@ -126,7 +140,8 @@ open class ColumnContentView: UIView {
     open func updateShowingModeWidth(_ width: CGFloat){
         self.showingModeWidth = width
         if self.isShowing {
-
+            self.frame = self.frame.with(width: width)
+            self.setNeedsLayout()
         }
     }
     
@@ -149,6 +164,47 @@ open class ColumnContentView: UIView {
             self.showHeader()
         }else{
             self.hideHeader()
+        }
+    }
+    
+    //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
+    func calculateSubviewsFrames(for base: CGRect){
+        if let size = self.fieldContent.preferredSizeOfField {
+            self.fieldContent.field.frame.size = size
+        }else{
+            self.fieldContent.field.frame.size = base.size
+        }
+        self.customSettingsToField(self.fieldContent.field)
+        self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: base)
+    }
+    
+    func baseSubviewsArea() -> CGRect {
+        if let insets = self.fieldFixedRepositioningInsets {
+            return self.bounds.insetBy(left: insets.left,
+                                       right: insets.right,
+                                       top: insets.top,
+                                       bottom: insets.bottom)
+        }else {
+            let insets = self.fieldRelativeRepositioningInsets
+            return self.bounds.insetBy(left: self.bounds.width*insets.left,
+                                       right: self.bounds.width*insets.right,
+                                       top: self.bounds.height*insets.top,
+                                       bottom: self.bounds.height*insets.bottom)
+        }
+    }
+    
+    //Atualiza o comprimento das constraints conforme o layout atual da tabela.
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        if self.lastLayoutedBounds != self.bounds {
+            self.calculateSubviewsFrames(for: self.baseSubviewsArea())
+        }
+        self.lastLayoutedBounds = self.bounds
+    }
+    
+    static func applyCustomSettings(_ field: UIView){
+        if let label = field as? UILabel, label.numberOfLines == 0 {
+            label.frame.size = label.sizeThatFits(CGSize(width: label.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
         }
     }
 }
