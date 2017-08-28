@@ -137,7 +137,7 @@ open class ColumnsViewContainer: UIView {
         if self.columns.count > 0 {
             self.columns.forEach({
                 self.addSubview($0)
-                $0.backgroundColor = UIColor.generateRandomColor()
+                $0.backgroundColor = UIColor.clear
             })
         }
     }
@@ -187,10 +187,10 @@ open class ColumnsViewContainer: UIView {
     func calculateSubviewsFrames(for base: CGRect){
         let widthDefinitions = self.getWidthDefinitionsOfColumns(for: base)
 
-//        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(for: base))
+        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(for: base))
         
         func lastColumnMaxX(current index: Int) -> CGFloat {
-            return index > 0 ? widthDefinitions[index - 1].calculatedWidth : 0
+            return index > 0 ? self.columns[index - 1].frame.maxX : 0
         }
         
         func columnWidth(withCalculated width: CGFloat, _ index: Int) -> CGFloat {
