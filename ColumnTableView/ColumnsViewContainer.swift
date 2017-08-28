@@ -61,7 +61,7 @@ open class ColumnsViewContainer: UIView {
     //Calculando as definicoes de comprimento calculados (com base na sugestao do delegate) e sugeridos pelo delegate (o delegate pode sugerir muita merda haha) de cada coluna.
     //Default base = self.bounds
     private func getWidthDefinitionsOfColumns(for base: CGRect) -> [(column: Int, calculatedWidth: CGFloat, preferredWidth: CGFloat)]{
-        let defaultColumnWidth = rint(base.width/CGFloat(self.columns.count))
+        let defaultColumnWidth = base.width/CGFloat(self.columns.count)
         
         var widthDefinitions: [(column: Int, calculatedWidth: CGFloat, preferredWidth: CGFloat)] = []
         var totalColumnsWidth: CGFloat = 0
@@ -74,13 +74,21 @@ open class ColumnsViewContainer: UIView {
             if let preferredRelativeWidth = self.delegate?.preferredRelativeWidth?(forColumnAt: index){
                 preferredWidth = preferredRelativeWidth
                 calculatedWidth = min(base.width * preferredWidth,widthLimitOfColumn)
-            }else if let preferredFixedWidth = self.delegate?.preferredInitialFixedWidth?(forColumnAt: index){
+            }
+            else if let preferredFixedWidth = self.delegate?.preferredInitialFixedWidth?(forColumnAt: index){
                 preferredWidth = preferredFixedWidth
                 calculatedWidth =  min(preferredWidth,widthLimitOfColumn)
             }
             
             widthDefinitions.append((column: index, calculatedWidth: calculatedWidth, preferredWidth: preferredWidth))
             totalColumnsWidth+=calculatedWidth
+        }
+        
+        if totalColumnsWidth != base.width {
+            //adjust definitions to fit base.width
+            let mainColumnIndex = self.delegate?.mainColumnIndex  ?? widthDefinitions.sorted(by: {$0.preferredWidth > $1.preferredWidth}).first?.column ?? 0
+            let totalSizeWithoutMainColumn: CGFloat = totalColumnsWidth - widthDefinitions[mainColumnIndex].calculatedWidth
+            widthDefinitions[mainColumnIndex].calculatedWidth = base.width - totalSizeWithoutMainColumn
         }
 
         return widthDefinitions
