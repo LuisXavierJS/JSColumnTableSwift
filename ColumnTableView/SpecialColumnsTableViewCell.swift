@@ -10,22 +10,20 @@ import UIKit
 
 class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol {
     typealias DataType = UIColor
-    let atualizar = UISwitch()
+//    let atualizar = UISwitch()
     let nome = UILabel()
     let another = UILabel()
     let executar = UIButton()
-    let imagem = UIImageView()
+//    let imagem = UIImageView()
     
     override var columnsFields: [ColumnFieldContent] {
-        return [ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
-                ColumnFieldContent(nome, title: "nome"),
-                ColumnFieldContent(another, title: "nome"),
-                ColumnFieldContent(executar,title: "executar", CGSize(width:200,height:50)),
-                ColumnFieldContent(imagem,title:"imagem", CGSize(width: 100, height: 50))]
-    }
-    
-    func redimensioningScaleForFreeSpace(forColumnAt index: Int) -> CGFloat {
-        return Array<CGFloat>(arrayLiteral: 0,0.5,0.5,0,0)[index]
+        return [
+//            ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
+            ColumnFieldContent(nome, title: "nome"),
+            ColumnFieldContent(another, title: "nome"),
+            ColumnFieldContent(executar,title: "executar", CGSize(width:200,height:50)),
+//            ColumnFieldContent(imagem,title:"imagem", CGSize(width: 100, height: 50))
+        ]
     }
     
     func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
@@ -34,11 +32,11 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol
 //    
     override func setupViews() {
         super.setupViews()
-        self.nome.numberOfLines = 0
-        self.nome.lineBreakMode = .byWordWrapping
-//        self.novoNome.backgroundColor = UIColor.blue
+        self.nome.backgroundColor = UIColor.green
+        self.another.backgroundColor = UIColor.blue
         self.executar.backgroundColor = UIColor.cyan
-        self.imagem.backgroundColor = UIColor.magenta
+        self.executar.setTitle("COÉ RAPAZIADA", for: .normal)
+//        self.imagem.backgroundColor = UIColor.magenta
     }
     
     func setup(_ object: UIColor) {

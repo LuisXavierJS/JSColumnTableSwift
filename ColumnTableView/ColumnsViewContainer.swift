@@ -135,7 +135,10 @@ open class ColumnsViewContainer: UIView {
     //Configurando todas as colunas, e escondendo as desejadas pelo delegate.
     private func setupAllColumns(){
         if self.columns.count > 0 {
-            self.columns.forEach({self.addSubview($0)})
+            self.columns.forEach({
+                self.addSubview($0)
+                $0.backgroundColor = UIColor.generateRandomColor()
+            })
         }
     }
     
@@ -184,17 +187,23 @@ open class ColumnsViewContainer: UIView {
     func calculateSubviewsFrames(for base: CGRect){
         let widthDefinitions = self.getWidthDefinitionsOfColumns(for: base)
 
-        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(for: base))
+//        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(for: base))
         
         func lastColumnMaxX(current index: Int) -> CGFloat {
-            return index > 0 ? widthDefinitions[index].calculatedWidth : 0
+            return index > 0 ? widthDefinitions[index - 1].calculatedWidth : 0
+        }
+        
+        func columnWidth(withCalculated width: CGFloat, _ index: Int) -> CGFloat {
+            return index > 0 ? width+self.spaceVariations[index] : width+self.spaceVariations[index]
         }
         
         widthDefinitions.forEach { (columnIndex,width,_) in
-            self.columns[columnIndex].updateShowingModeWidth(width+self.spaceVariations[columnIndex])
+            print(self.columns[columnIndex].frame)
+            self.columns[columnIndex].updateShowingModeWidth(columnWidth(withCalculated: width,columnIndex))
             self.columns[columnIndex].frame = self.columns[columnIndex].frame
-                .with(x: lastColumnMaxX(current: columnIndex) + 1)
+                .with(x: lastColumnMaxX(current: columnIndex))
                 .with(height: self.bounds.height)
+            print(self.columns[columnIndex].frame)
         }
     }
     
@@ -205,9 +214,9 @@ open class ColumnsViewContainer: UIView {
     //Atualiza o comprimento das constraints conforme o layout atual da tabela.
     open override func layoutSubviews() {
         super.layoutSubviews()
-        if self.lastLayoutedBounds != self.bounds {
+//        if self.lastLayoutedBounds != self.bounds {
             self.calculateSubviewsFrames(for: self.baseSubviewsArea())
-        }
+//        }
         self.lastLayoutedBounds = self.bounds
     }
 

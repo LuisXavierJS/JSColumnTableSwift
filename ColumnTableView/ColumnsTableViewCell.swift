@@ -33,7 +33,7 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
     open func setupViews(){
         self.containerView.delegate = self
         containerView.backgroundColor = UIColor.red
-        self.addSubview(containerView)
+        self.contentView.addSubview(containerView)
     }
    
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {

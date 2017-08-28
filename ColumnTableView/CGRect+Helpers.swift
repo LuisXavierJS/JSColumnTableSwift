@@ -17,6 +17,22 @@ public enum CGRectAlignment {
     case right(addendum: CGFloat)
 }
 
+extension CGSize {
+    func limitedTo(_ limitSize: CGSize) -> CGSize{
+        return self
+            .with(width: self.width > limitSize.width ? limitSize.width : self.width)
+            .with(height: self.height > limitSize.height ? limitSize.height : self.height)
+    }
+    
+    func with(width: CGFloat) -> CGSize {
+        return CGSize(width: width, height: self.height)
+    }
+    
+    func with(height: CGFloat) -> CGSize {
+        return CGSize(width: self.width, height: height)
+    }
+}
+
 extension CGRect {
     
     func insetBy(left: CGFloat = 0, right: CGFloat = 0, top: CGFloat = 0, bottom: CGFloat = 0) -> CGRect {

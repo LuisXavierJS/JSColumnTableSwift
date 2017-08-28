@@ -45,9 +45,9 @@ open class ColumnContentView: UIView {
     
     open var fieldRelativeRepositioningInsets: UIEdgeInsets = UIEdgeInsetsMake(0.025, 0.025, 0.025, 0.025)
     
-    open var rightSeparatorFrameAlignments: [CGRectAlignment] = [.right(addendum:0)]
+    open var rightSeparatorFrameAlignments: [CGRectAlignment] = [.right(addendum:0.5)]
     
-    open var leftSeparatorFrameAlignments: [CGRectAlignment] = [.left(addendum:0)]
+    open var leftSeparatorFrameAlignments: [CGRectAlignment] = [.left(addendum:-0.5)]
     
     open var fieldFrameAlignments: [CGRectAlignment] = [.horizontallyCentralized(addendum: 0), .verticallyCentralized(addendum:0)]
     
@@ -94,9 +94,9 @@ open class ColumnContentView: UIView {
         rightSeparator.backgroundColor = UIColor.black
         leftSeparator.backgroundColor = UIColor.black
         
-        self.addSubview(rightSeparator)
         self.addSubview(leftSeparator)
         self.addSubview(self.fieldContent.field)
+        self.addSubview(rightSeparator)
     }
     
     private func createHeaderTitle(){
@@ -179,13 +179,13 @@ open class ColumnContentView: UIView {
     //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
     func calculateSubviewsFrames(for base: CGRect){
         if let size = self.fieldContent.preferredSizeOfField {
-            self.fieldContent.field.frame.size = size
+            self.fieldContent.field.frame.size = size.limitedTo(base.size)
         }else{
             self.fieldContent.field.frame.size = base.size
         }
         self.applyCustomSettingsToField(self.fieldContent.field)
         
-        self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: base)
+        self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: self.bounds)
         self.rightSeparator.frame = self.bounds.with(width: self.rightSeparatorLineWidth).aligned(self.rightSeparatorFrameAlignments, in: self.bounds)
         self.leftSeparator.frame = self.bounds.with(width: self.leftSeparatorLineWidth).aligned(self.leftSeparatorFrameAlignments, in: self.bounds)
     }
