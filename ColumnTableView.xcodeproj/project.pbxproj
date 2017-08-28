@@ -23,6 +23,8 @@
 		8E8A039C1F342B570053CD09 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A039B1F342B570053CD09 /* Helpers.swift */; };
 		8E8A039E1F342F0D0053CD09 /* ColumnContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A039D1F342F0D0053CD09 /* ColumnContentView.swift */; };
 		8E93E00E1F37E8BB00E72856 /* AnonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E93E00D1F37E8BB00E72856 /* AnonTableViewCell.swift */; };
+		8EC4071F1F520DB500916B55 /* GenericTableDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4071E1F520DB500916B55 /* GenericTableDatasource.swift */; };
+		8EC407211F52149E00916B55 /* SpecialColumnsDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC407201F52149E00916B55 /* SpecialColumnsDatasource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,8 @@
 		8E8A039B1F342B570053CD09 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		8E8A039D1F342F0D0053CD09 /* ColumnContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnContentView.swift; sourceTree = "<group>"; };
 		8E93E00D1F37E8BB00E72856 /* AnonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonTableViewCell.swift; sourceTree = "<group>"; };
+		8EC4071E1F520DB500916B55 /* GenericTableDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericTableDatasource.swift; sourceTree = "<group>"; };
+		8EC407201F52149E00916B55 /* SpecialColumnsDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecialColumnsDatasource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +208,8 @@
 			isa = PBXGroup;
 			children = (
 				8E8A039B1F342B570053CD09 /* Helpers.swift */,
+				8EC4071E1F520DB500916B55 /* GenericTableDatasource.swift */,
+				8EC407201F52149E00916B55 /* SpecialColumnsDatasource.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -348,7 +354,9 @@
 				8E8A039C1F342B570053CD09 /* Helpers.swift in Sources */,
 				8E8A038E1F3405330053CD09 /* ColumnsTableView.swift in Sources */,
 				8E93E00E1F37E8BB00E72856 /* AnonTableViewCell.swift in Sources */,
+				8EC407211F52149E00916B55 /* SpecialColumnsDatasource.swift in Sources */,
 				8E8A039E1F342F0D0053CD09 /* ColumnContentView.swift in Sources */,
+				8EC4071F1F520DB500916B55 /* GenericTableDatasource.swift in Sources */,
 				8E8A03641F3404040053CD09 /* ColumnTableView.xcdatamodeld in Sources */,
 				716CAA301F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift in Sources */,
 				8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */,

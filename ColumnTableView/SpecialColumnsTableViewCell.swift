@@ -8,7 +8,8 @@
 
 import UIKit
 
-class SpecialColumnsTableViewCell: ColumnsTableViewCell {
+class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol {
+    typealias DataType = UIColor
     let atualizar = UISwitch()
     let nome = UILabel()
     let novoNome = UITextField()
@@ -38,5 +39,9 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell {
         self.novoNome.backgroundColor = UIColor.blue
         self.executar.backgroundColor = UIColor.cyan
         self.imagem.backgroundColor = UIColor.magenta
+    }
+    
+    func setup(_ object: UIColor) {
+        self.contentView.backgroundColor = object
     }
 }
