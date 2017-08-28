@@ -24,6 +24,8 @@ import UIKit
 }
 
 open class ColumnsTableView: UITableView {
+    var cellInstanceForCalculations: ColumnsTableViewCell?
+    
     open weak var columnsControllerDelegate: TableColumnsVisibilityControllerDelegate?
     
     private func setColumnsVisibility(forColumnsView view: UIView?){
@@ -49,6 +51,11 @@ open class ColumnsTableView: UITableView {
         let header = super.dequeueReusableHeaderFooterView(withIdentifier: identifier)
         self.setColumnsVisibility(forColumnsView: header)
         return header
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        self.cellInstanceForCalculations?.layoutSubviews()
     }
 
 }

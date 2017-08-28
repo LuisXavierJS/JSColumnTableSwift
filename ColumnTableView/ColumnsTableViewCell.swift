@@ -14,12 +14,9 @@ public protocol ColumnsViewProtocol: class {
 }
 
 open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDelegate, ColumnsViewProtocol {
+    private var lastLayoutedBounds: CGRect = CGRect.zero
     open let containerView: ColumnsViewContainer = ColumnsViewContainer()
     
-    private lazy var containerConstraintsToActivateOnSetup: [NSLayoutConstraint] = {
-        return self.createContainerConstraintsToActivateOnSetup()
-    }()
-        
     open var columnsFields: [ColumnFieldContent] {
         return []
     }
@@ -34,16 +31,8 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
     
     open func setupViews(){
         self.containerView.delegate = self
-        
     }
-    
-    open func createContainerConstraintsToActivateOnSetup() -> [NSLayoutConstraint] {
-        var containerConstraints: [NSLayoutConstraint] = []
-        containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", metrics: nil, views: ["container":self.containerView]))
-        containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", metrics: nil, views: ["container":self.containerView]))
-        return containerConstraints
-    }
-    
+   
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupViews()
@@ -52,5 +41,13 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setupViews()
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        if self.lastLayoutedBounds != self.bounds {
+            print("CELL BOUNDS CHANGED!")
+        }
+        self.lastLayoutedBounds = self.bounds
     }
 }
