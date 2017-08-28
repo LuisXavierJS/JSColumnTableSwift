@@ -34,23 +34,32 @@ open class LeftSeparationLineView: UIView {}
 open class ColumnContentView: UIView {
     private var lastLayoutedBounds: CGRect = CGRect.zero
     
-    open private(set) var fieldContent: ColumnFieldContent!
     
-    open var customSettingsToField: ((UIView)->Void) = ColumnContentView.applyCustomSettings
+    open var rightSeparatorLineWidth: CGFloat = 1
+    
+    open var leftSeparatorLineWidth: CGFloat = 1
+    
+    open var applyCustomSettingsToField: ((UIView)->Void) = ColumnContentView.applyCustomSettings
     
     open var fieldFixedRepositioningInsets: UIEdgeInsets?
     
     open var fieldRelativeRepositioningInsets: UIEdgeInsets = UIEdgeInsetsMake(0.025, 0.025, 0.025, 0.025)
     
+    open var rightSeparatorFrameAlignments: [CGRectAlignment] = [.right(addendum:0)]
+    
+    open var leftSeparatorFrameAlignments: [CGRectAlignment] = [.left(addendum:0)]
+    
     open var fieldFrameAlignments: [CGRectAlignment] = [.horizontallyCentralized(addendum: 0), .verticallyCentralized(addendum:0)]
+    
+    open private(set) var fieldContent: ColumnFieldContent!
     
     open private(set) var isShowing: Bool = true
     
     open private(set) var showingModeWidth: CGFloat = 0
     
-    open private(set) weak var rightSeparator: RightSeparationLineView!
+    open private(set) var rightSeparator: RightSeparationLineView = RightSeparationLineView()
     
-    open private(set) weak var leftSeparator: LeftSeparationLineView!
+    open private(set) var leftSeparator: LeftSeparationLineView = LeftSeparationLineView()
     
     open private(set) var headerTitle: UILabel?
     
@@ -60,6 +69,12 @@ open class ColumnContentView: UIView {
         didSet{
             self.updateHeaderTitleFont()
         }
+    }
+    
+    deinit {
+        self.rightSeparator.removeFromSuperview()
+        self.leftSeparator.removeFromSuperview()
+        self.fieldContent.field.removeFromSuperview()
     }
     
     public init(withField field: ColumnFieldContent){
@@ -75,18 +90,13 @@ open class ColumnContentView: UIView {
     
     private func setupViews(){
         self.clipsToBounds = false
-        let rightLine = RightSeparationLineView()
-        let leftLine = LeftSeparationLineView()
         
-        rightLine.backgroundColor = UIColor.black
-        leftLine.backgroundColor = UIColor.black
+        rightSeparator.backgroundColor = UIColor.black
+        leftSeparator.backgroundColor = UIColor.black
         
-        self.addSubview(rightLine)
-        self.addSubview(leftLine)
+        self.addSubview(rightSeparator)
+        self.addSubview(leftSeparator)
         self.addSubview(self.fieldContent.field)
-        
-        self.rightSeparator = rightLine
-        self.leftSeparator = leftLine
     }
     
     private func createHeaderTitle(){
@@ -174,8 +184,11 @@ open class ColumnContentView: UIView {
         }else{
             self.fieldContent.field.frame.size = base.size
         }
-        self.customSettingsToField(self.fieldContent.field)
+        self.applyCustomSettingsToField(self.fieldContent.field)
+        
         self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: base)
+        self.rightSeparator.frame = self.bounds.with(width: self.rightSeparatorLineWidth).aligned(self.rightSeparatorFrameAlignments, in: self.bounds)
+        self.leftSeparator.frame = self.bounds.with(width: self.leftSeparatorLineWidth).aligned(self.leftSeparatorFrameAlignments, in: self.bounds)
     }
     
     func baseSubviewsArea() -> CGRect {

@@ -52,6 +52,10 @@ extension CGRect {
         return self.with(width: delta.width).with(height: delta.height)
     }
     
+    func with(point delta: CGPoint) -> CGRect {
+        return self.with(x: delta.x).with(y: delta.y)
+    }
+    
     func with(x delta: CGFloat) -> CGRect {
         return CGRect(x: delta, y: self.origin.y, width: self.size.width, height: self.size.height)
     }
