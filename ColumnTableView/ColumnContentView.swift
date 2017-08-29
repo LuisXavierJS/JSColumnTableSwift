@@ -32,8 +32,9 @@ open class LeftSeparationLineView: UIView {}
 
 
 open class ColumnContentView: UIView {
-    private var lastLayoutedBounds: CGRect = CGRect.zero
+    weak var cachedColumn: ColumnContentView?
     
+    private var lastLayoutedBounds: CGRect = CGRect.zero
     
     open var rightSeparatorLineWidth: CGFloat = 1
     
@@ -51,7 +52,7 @@ open class ColumnContentView: UIView {
     
     open var fieldFrameAlignments: [CGRectAlignment] = [.horizontallyCentralized(addendum: 0), .verticallyCentralized(addendum:0)]
     
-    open private(set) var fieldContent: ColumnFieldContent!
+    open private(set) var fieldContent: ColumnFieldContent?
     
     open private(set) var isShowing: Bool = true
     
@@ -68,7 +69,7 @@ open class ColumnContentView: UIView {
     deinit {
         self.rightSeparator.removeFromSuperview()
         self.leftSeparator.removeFromSuperview()
-        self.fieldContent.field.removeFromSuperview()
+        self.fieldContent?.field?.removeFromSuperview()
     }
     
     public init(withField field: ColumnFieldContent){
@@ -87,9 +88,11 @@ open class ColumnContentView: UIView {
         
         rightSeparator.backgroundColor = UIColor.black
         leftSeparator.backgroundColor = UIColor.black
-        self.fieldContent.field.backgroundColor = UIColor.orange.withAlphaComponent(0.5)
+        
         self.addSubview(leftSeparator)
-        self.addSubview(self.fieldContent.field)
+        if let field = self.fieldContent?.field {
+            self.addSubview(field)
+        }
         self.addSubview(rightSeparator)
     }
     
@@ -97,13 +100,13 @@ open class ColumnContentView: UIView {
         let label = UILabel()
         self.headerTitle = label
         self.headerTitle?.adjustsFontSizeToFitWidth = true
-        self.headerTitle?.text = self.fieldContent.title
+        self.headerTitle?.text = self.fieldContent?.title
     }
 
     private func setFieldVisibility(showing: Bool){
-        self.fieldContent.field.isUserInteractionEnabled = showing
-        self.fieldContent.field.isOpaque = showing
-        self.fieldContent.field.isHidden = !showing
+        self.fieldContent?.field?.isUserInteractionEnabled = showing
+        self.fieldContent?.field?.isOpaque = showing
+        self.fieldContent?.field?.isHidden = !showing
     }
     
     private func showHeader(){
@@ -164,17 +167,35 @@ open class ColumnContentView: UIView {
     
     //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
     func calculateSubviewsFrames(for base: CGRect){
-        if let size = self.fieldContent.preferredSizeOfField {
-            self.fieldContent.field.frame.size = size.limitedTo(base.size)
-        }else{
-            self.fieldContent.field.frame.size = base.size
+        if let cached = self.cachedColumn {
+            
+            self.headerTitle?.frame = cached.headerTitle?.frame ?? self.bounds.insetBy(dx: 5, dy: 5)
+            self.rightSeparator.frame = cached.rightSeparator.frame
+            self.leftSeparator.frame = cached.leftSeparator.frame
+            
+            self.fieldContent?.field.frame = cached.fieldContent?.field.frame ?? CGRect.zero
+            if let field = self.fieldContent?.field {
+                self.applyCustomSettingsToField(field)
+            }
+            
+        }else {
+            if let size = self.fieldContent?.preferredSizeOfField {
+                self.fieldContent?.field?.frame.size = size.limitedTo(base.size)
+            }else{
+                self.fieldContent?.field?.frame.size = base.size
+            }
+            
+            if let field = self.fieldContent?.field {
+                self.applyCustomSettingsToField(field)
+            }
+            
+            self.headerTitle?.frame = self.bounds.insetBy(dx: 5, dy: 5)
+            if let field = self.fieldContent?.field {
+                field.frame = field.frame.aligned(self.fieldFrameAlignments, in: base)
+            }
+            self.rightSeparator.frame = self.bounds.with(width: self.rightSeparatorLineWidth).aligned(self.rightSeparatorFrameAlignments, in: self.bounds)
+            self.leftSeparator.frame = self.bounds.with(width: self.leftSeparatorLineWidth).aligned(self.leftSeparatorFrameAlignments, in: self.bounds)
         }
-        self.applyCustomSettingsToField(self.fieldContent.field)
-        
-        self.headerTitle?.frame = self.bounds.insetBy(dx: 5, dy: 5)
-        self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: base)
-        self.rightSeparator.frame = self.bounds.with(width: self.rightSeparatorLineWidth).aligned(self.rightSeparatorFrameAlignments, in: self.bounds)
-        self.leftSeparator.frame = self.bounds.with(width: self.leftSeparatorLineWidth).aligned(self.leftSeparatorFrameAlignments, in: self.bounds)
     }
     
     func baseSubviewsArea() -> CGRect {
@@ -202,7 +223,7 @@ open class ColumnContentView: UIView {
     }
     
     static func applyCustomSettings(_ field: UIView){
-        if let label = field as? UILabel, label.numberOfLines == 0 {
+        if let label = field as? UILabel, label.numberOfLines != 1{
             label.frame.size = label.sizeThatFits(CGSize(width: label.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
         }
     }

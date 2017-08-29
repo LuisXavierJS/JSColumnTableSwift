@@ -32,9 +32,6 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol
 //
     override func setupViews() {
         super.setupViews()
-//        self.nome.backgroundColor = UIColor.green
-//        self.another.backgroundColor = UIColor.blue
-//        self.executar.backgroundColor = UIColor.cyan
         self.nome.text = "COEEEEEEH"
         self.another.text = "RAPAAAZIAAADAA"
         self.executar.setTitle("COÉ RAPAZIADA", for: .normal)
@@ -43,10 +40,10 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol
         self.executar.setTitleColor(UIColor.generateRandomColor(), for: .normal)
         self.executar.layer.borderWidth = 1
         self.executar.layer.cornerRadius = 5
-//        self.imagem.backgroundColor = UIColor.magenta
     }
     
     func setup(_ object: UIColor) {
-//        self.contentView.backgroundColor = object
+        self.another.backgroundColor = object.withAlphaComponent(0.5)
+        self.nome.backgroundColor = object.withAlphaComponent(0.5)
     }
 }

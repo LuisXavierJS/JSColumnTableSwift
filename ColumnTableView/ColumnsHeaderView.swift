@@ -33,6 +33,10 @@ open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterVie
         self.columnsViewContainer.setHeaderMode(true)
     }
     
+    public func setCachedMirrorCellForCalculations(mirrorCell: ColumnsTableViewCell?) {
+        self.columnsViewContainerCell.setCachedMirrorCellForCalculations(mirrorCell: mirrorCell)
+    }
+    
     open func hideColumns(_ columns: [Int]){
         self.columnsViewContainer.hideColumns(columns)
     }

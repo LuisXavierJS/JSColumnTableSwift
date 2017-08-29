@@ -24,26 +24,30 @@ import UIKit
 }
 
 open class ColumnsTableView: UITableView {
-    var cellInstanceForCalculations: ColumnsTableViewCell?
+    private weak var cellInstanceForCalculations: ColumnsTableViewCell?
     
     open weak var columnsControllerDelegate: TableColumnsVisibilityControllerDelegate?
     
     private func setColumnsVisibility(forColumnsView view: UIView?){
-        if let columnsView = view as? ColumnsViewProtocol,
-            let columnsToHide = self.columnsControllerDelegate?.hideColumns(forTable: self){
-            columnsView.hideColumns(columnsToHide)
+        if let columnsView = view as? ColumnsViewProtocol{
+            columnsView.setCachedMirrorCellForCalculations(mirrorCell: self.cellInstanceForCalculations)
+            if let columnsToHide = self.columnsControllerDelegate?.hideColumns(forTable: self) {
+                columnsView.hideColumns(columnsToHide)
+            }
+        }
+    }
+    
+    private func setCellInstanceForCalculationsIfNeeded(with cell: UITableViewCell?){
+        if self.cellInstanceForCalculations == nil,
+            let columnsCell = cell as? ColumnsTableViewCell {
+            self.cellInstanceForCalculations = columnsCell
         }
     }
     
     open override func dequeueReusableCell(withIdentifier identifier: String) -> UITableViewCell? {
         let cell = super.dequeueReusableCell(withIdentifier: identifier)
         self.setColumnsVisibility(forColumnsView: cell)
-        return cell
-    }
-    
-    open override func dequeueReusableCell(withIdentifier identifier: String, for indexPath: IndexPath) -> UITableViewCell {
-        let cell = super.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
-        self.setColumnsVisibility(forColumnsView: cell)
+        self.setCellInstanceForCalculationsIfNeeded(with: cell)
         return cell
     }
     
@@ -51,11 +55,6 @@ open class ColumnsTableView: UITableView {
         let header = super.dequeueReusableHeaderFooterView(withIdentifier: identifier)
         self.setColumnsVisibility(forColumnsView: header)
         return header
-    }
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        self.cellInstanceForCalculations?.layoutSubviews()
     }
 
 }
