@@ -182,23 +182,31 @@ open class ColumnsViewContainer: UIView {
     
     //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
     func calculateSubviewsFrames(for base: CGRect){
-        let widthDefinitions = self.getWidthDefinitionsOfColumns(for: base)
-
-        self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(for: base))
-        
-        func lastColumnMaxX(current index: Int) -> CGFloat {
-            return index > 0 ? self.columns[index - 1].frame.maxX : 0
-        }
-        
-        func columnWidth(withCalculated width: CGFloat, _ index: Int) -> CGFloat {
-            return index > 0 ? width+self.spaceVariations[index] : width+self.spaceVariations[index]
-        }
-        
-        widthDefinitions.forEach { (columnIndex,width,_) in
-            self.columns[columnIndex].updateShowingModeWidth(columnWidth(withCalculated: width,columnIndex))
-            self.columns[columnIndex].frame = self.columns[columnIndex].frame
-                .with(x: lastColumnMaxX(current: columnIndex))
-                .with(height: self.bounds.height)
+        if let cached = self.delegate?.getCachedMirrorCellForCalculations(), cached.columnsFields.count == self.columns.count{
+           self.columns.enumerated().forEach({ (index,column) in
+                let cachedColumn = cached.containerView.columns[index]
+                column.frame = cachedColumn.frame
+                column.cachedColumn = cachedColumn
+           })
+        }else {
+            let widthDefinitions = self.getWidthDefinitionsOfColumns(for: base)
+            
+            self.redistributeSpaceOfColumns(forSpaceVariation: self.calculateSpaceVariation(for: base))
+            
+            func lastColumnMaxX(current index: Int) -> CGFloat {
+                return index > 0 ? self.columns[index - 1].frame.maxX : 0
+            }
+            
+            func columnWidth(withCalculated width: CGFloat, _ index: Int) -> CGFloat {
+                return index > 0 ? width+self.spaceVariations[index] : width+self.spaceVariations[index]
+            }
+            
+            widthDefinitions.forEach { (columnIndex,width,_) in
+                self.columns[columnIndex].updateShowingModeWidth(columnWidth(withCalculated: width,columnIndex))
+                self.columns[columnIndex].frame = self.columns[columnIndex].frame
+                    .with(x: lastColumnMaxX(current: columnIndex))
+                    .with(height: self.bounds.height)
+            }
         }
     }
     
@@ -209,9 +217,9 @@ open class ColumnsViewContainer: UIView {
     //Atualiza o comprimento das constraints conforme o layout atual da tabela.
     open override func layoutSubviews() {
         super.layoutSubviews()
-//        if self.lastLayoutedBounds != self.bounds {
+        if self.lastLayoutedBounds != self.bounds {
             self.calculateSubviewsFrames(for: self.baseSubviewsArea())
-//        }
+        }
         self.lastLayoutedBounds = self.bounds
     }
 

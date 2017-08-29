@@ -48,11 +48,11 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
         self.setupViews()
     }
     
-    func setCachedMirrorCellForCalculations(mirrorCell: ColumnsTableViewCell?) {
+    public func setCachedMirrorCellForCalculations(mirrorCell: ColumnsTableViewCell?) {
         self.cachedMirrorCell = mirrorCell
     }
     
-    func getCachedMirrorCellForCalculations() -> ColumnsTableViewCell? {
+    public func getCachedMirrorCellForCalculations() -> ColumnsTableViewCell? {
         return self.cachedMirrorCell
     }
     
