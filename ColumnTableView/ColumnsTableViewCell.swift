@@ -11,9 +11,12 @@ import UIKit
 public protocol ColumnsViewProtocol: class {
     func hideColumns(_ columns: [Int])
     func showColumns(_ columns: [Int])
+    func setCachedMirrorCellForCalculations(mirrorCell: ColumnsTableViewCell?)
 }
 
 open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerControllerDelegate, ColumnsViewProtocol {
+    weak private var cachedMirrorCell: ColumnsTableViewCell?
+    
     private var lastLayoutedBounds: CGRect = CGRect.zero
 
     open let containerView: ColumnsViewContainer = ColumnsViewContainer()
@@ -43,6 +46,14 @@ open class ColumnsTableViewCell: UITableViewCell, ColumnsViewContainerController
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setupViews()
+    }
+    
+    func setCachedMirrorCellForCalculations(mirrorCell: ColumnsTableViewCell?) {
+        self.cachedMirrorCell = mirrorCell
+    }
+    
+    func getCachedMirrorCellForCalculations() -> ColumnsTableViewCell? {
+        return self.cachedMirrorCell
     }
     
     func calculateSubviewsFrames(for base: CGRect){

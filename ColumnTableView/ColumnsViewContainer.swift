@@ -12,6 +12,8 @@ import UIKit
 @objc public protocol ColumnsViewContainerControllerDelegate: class {
     var columnsFields: [ColumnFieldContent] {get}
     
+    func getCachedMirrorCellForCalculations() -> ColumnsTableViewCell?
+    
 //  Informa coluna que preferencialmente tera seu tamanho variavel conforme a variacao de tamanho da superview e das demais colunas
 // - Se nao for implementado, o default sera assumido como a coluna de maior tamanho na tabela.
     @objc optional var mainColumnIndex: Int {get}
@@ -39,8 +41,7 @@ import UIKit
 }
 
 open class ColumnsViewContainer: UIView {
-    private var lastLayoutedBounds: CGRect = CGRect.zero
-
+    private var lastLayoutedBounds: CGRect = CGRect.zero    
     
     open private(set) weak var mainColumn: ColumnContentView?
     open private(set) var columns: [ColumnContentView] = []
