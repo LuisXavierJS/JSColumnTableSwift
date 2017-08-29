@@ -194,12 +194,10 @@ open class ColumnsViewContainer: UIView {
         }
         
         widthDefinitions.forEach { (columnIndex,width,_) in
-            print(self.columns[columnIndex].frame)
             self.columns[columnIndex].updateShowingModeWidth(columnWidth(withCalculated: width,columnIndex))
             self.columns[columnIndex].frame = self.columns[columnIndex].frame
                 .with(x: lastColumnMaxX(current: columnIndex))
                 .with(height: self.bounds.height)
-            print(self.columns[columnIndex].frame)
         }
     }
     
