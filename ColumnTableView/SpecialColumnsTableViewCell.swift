@@ -19,9 +19,9 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol
     override var columnsFields: [ColumnFieldContent] {
         return [
 //            ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
-            ColumnFieldContent(nome, title: "nome"),
-            ColumnFieldContent(another, title: "nome"),
-            ColumnFieldContent(executar,title: "executar", CGSize(width:500,height:50)),
+            ColumnFieldContent(nome, title: "Wat"),
+            ColumnFieldContent(another, title: "Da"),
+            ColumnFieldContent(executar,title: "Fok", CGSize(width:500,height:50)),
 //            ColumnFieldContent(imagem,title:"imagem", CGSize(width: 100, height: 50))
         ]
     }

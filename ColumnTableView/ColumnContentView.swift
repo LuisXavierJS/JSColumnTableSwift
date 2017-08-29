@@ -171,6 +171,7 @@ open class ColumnContentView: UIView {
         }
         self.applyCustomSettingsToField(self.fieldContent.field)
         
+        self.headerTitle?.frame = self.bounds.insetBy(dx: 5, dy: 5)
         self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: base)
         self.rightSeparator.frame = self.bounds.with(width: self.rightSeparatorLineWidth).aligned(self.rightSeparatorFrameAlignments, in: self.bounds)
         self.leftSeparator.frame = self.bounds.with(width: self.leftSeparatorLineWidth).aligned(self.leftSeparatorFrameAlignments, in: self.bounds)

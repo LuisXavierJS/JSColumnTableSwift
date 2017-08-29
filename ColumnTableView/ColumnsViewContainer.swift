@@ -165,7 +165,9 @@ open class ColumnsViewContainer: UIView {
         self.columns.enumerated().forEach({ (index, column) in
             let headerMode = headerDelegate.headerMode?(forColumnAt: index)
             column.setHeaderMode(on,headerMode)
-            headerDelegate.applySettingsOn?(headearLabel: column.headerTitle, forColumnAt: index)
+            if on {
+                headerDelegate.applySettingsOn?(headearLabel: column.headerTitle, forColumnAt: index)
+            }
         })
     }
     

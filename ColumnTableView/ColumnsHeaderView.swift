@@ -9,6 +9,8 @@
 import UIKit
 
 open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnsViewProtocol {
+    private var lastLayoutedBounds: CGRect = CGRect.zero
+    
     private var columnsViewContainerCell: T = T()
     
     open weak var columnsViewContainer: ColumnsViewContainer! {
@@ -39,7 +41,19 @@ open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterVie
         self.columnsViewContainer.showColumns(columns)
     }
     
+    func calculateSubviewsFrames(for base: CGRect){
+        self.columnsViewContainer.frame = base
+    }
+    
+    func baseSubviewsArea() -> CGRect {
+        return self.bounds
+    }
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
+        if self.lastLayoutedBounds != self.bounds {
+            self.calculateSubviewsFrames(for: self.baseSubviewsArea())
+        }
+        self.lastLayoutedBounds = self.bounds
     }
 }
