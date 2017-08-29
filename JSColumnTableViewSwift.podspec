@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JSColumnTableViewSwift'
-  s.version          = '0.2.0'
+  s.version          = '0.2.1'
   s.summary          = 'JSColumnTableViewSwift is an auto-layouting columned UITableView.'
 
   s.description      = <<-DESC
