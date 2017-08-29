@@ -8,7 +8,9 @@
 
 import UIKit
 
-open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnHeaderControllerDelegate, ColumnsViewProtocol {
+open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnsViewProtocol {
+    private var lastLayoutedBounds: CGRect = CGRect.zero
+    
     private var columnsViewContainerCell: T = T()
     
     open weak var columnsViewContainer: ColumnsViewContainer! {
@@ -27,13 +29,7 @@ open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterVie
 
     private func setupViews(){
         self.columnsViewContainerCell.setupViews()
-        self.columnsViewContainer.headerDelegate = self
-        self.columnsViewContainer.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.columnsViewContainer)
-        var containerConstraints: [NSLayoutConstraint] = []
-        containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", metrics: nil, views: ["container":self.columnsViewContainer]))
-        containerConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", metrics: nil, views: ["container":self.columnsViewContainer]))
-        NSLayoutConstraint.activateIfNotActive(containerConstraints)
         self.columnsViewContainer.setHeaderMode(true)
     }
     
@@ -45,7 +41,19 @@ open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterVie
         self.columnsViewContainer.showColumns(columns)
     }
     
+    func calculateSubviewsFrames(for base: CGRect){
+        self.columnsViewContainer.frame = base
+    }
+    
+    func baseSubviewsArea() -> CGRect {
+        return self.bounds
+    }
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
+        if self.lastLayoutedBounds != self.bounds {
+            self.calculateSubviewsFrames(for: self.baseSubviewsArea())
+        }
+        self.lastLayoutedBounds = self.bounds
     }
 }
