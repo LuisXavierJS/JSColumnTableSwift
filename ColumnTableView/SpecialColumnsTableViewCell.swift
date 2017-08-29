@@ -10,38 +10,43 @@ import UIKit
 
 class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol {
     typealias DataType = UIColor
-    let atualizar = UISwitch()
+//    let atualizar = UISwitch()
     let nome = UILabel()
-    let novoNome = UITextField()
+    let another = UILabel()
     let executar = UIButton()
-    let imagem = UIImageView()
+//    let imagem = UIImageView()
     
     override var columnsFields: [ColumnFieldContent] {
-        return [ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
-                ColumnFieldContent(nome, title: "nome"),
-                ColumnFieldContent(novoNome,title: "novoNome", CGSize(width:200,height:30)),
-                ColumnFieldContent(executar,title: "executar", CGSize(width:200,height:50)),
-                ColumnFieldContent(imagem,title:"imagem", CGSize(width: 100, height: 50))]
-    }
-    
-    func redimensioningScaleForFreeSpace(forColumnAt index: Int) -> CGFloat {
-        return Array<CGFloat>(arrayLiteral: 0,0.5,0.5,0,0)[index]
+        return [
+//            ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
+            ColumnFieldContent(nome, title: "Wat"),
+            ColumnFieldContent(another, title: "Da"),
+            ColumnFieldContent(executar,title: "Fok", CGSize(width:500,height:50)),
+//            ColumnFieldContent(imagem,title:"imagem", CGSize(width: 100, height: 50))
+        ]
     }
     
     func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
-        return Array<CGFloat>(arrayLiteral: 60,200,200,200,50)[index]
+        return Array<CGFloat>(arrayLiteral: 300,200,200,200,50)[index]
     }
-    
+//
     override func setupViews() {
         super.setupViews()
-        self.nome.numberOfLines = 0
-        self.nome.lineBreakMode = .byWordWrapping
-        self.novoNome.backgroundColor = UIColor.blue
-        self.executar.backgroundColor = UIColor.cyan
-        self.imagem.backgroundColor = UIColor.magenta
+//        self.nome.backgroundColor = UIColor.green
+//        self.another.backgroundColor = UIColor.blue
+//        self.executar.backgroundColor = UIColor.cyan
+        self.nome.text = "COEEEEEEH"
+        self.another.text = "RAPAAAZIAAADAA"
+        self.executar.setTitle("COÉ RAPAZIADA", for: .normal)
+        self.executar.layer.borderColor = UIColor.generateRandomColor().cgColor
+        self.executar.backgroundColor = UIColor.white
+        self.executar.setTitleColor(UIColor.generateRandomColor(), for: .normal)
+        self.executar.layer.borderWidth = 1
+        self.executar.layer.cornerRadius = 5
+//        self.imagem.backgroundColor = UIColor.magenta
     }
     
     func setup(_ object: UIColor) {
-        self.contentView.backgroundColor = object
+//        self.contentView.backgroundColor = object
     }
 }

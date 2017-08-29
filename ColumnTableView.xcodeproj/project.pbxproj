@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		716CAA301F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716CAA2F1F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift */; };
+		8E4809141F548FCC00BABAC4 /* CGRect+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4809131F548FCC00BABAC4 /* CGRect+Helpers.swift */; };
 		8E8A035C1F3404040053CD09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A035B1F3404040053CD09 /* AppDelegate.swift */; };
 		8E8A035E1F3404040053CD09 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A035D1F3404040053CD09 /* ViewController.swift */; };
 		8E8A03611F3404040053CD09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E8A035F1F3404040053CD09 /* Main.storyboard */; };
@@ -46,6 +47,7 @@
 
 /* Begin PBXFileReference section */
 		716CAA2F1F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecialColumnsTableViewCell.swift; sourceTree = "<group>"; };
+		8E4809131F548FCC00BABAC4 /* CGRect+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGRect+Helpers.swift"; sourceTree = "<group>"; };
 		8E8A03581F3404040053CD09 /* ColumnTableView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColumnTableView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E8A035B1F3404040053CD09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E8A035D1F3404040053CD09 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				8E8A039B1F342B570053CD09 /* Helpers.swift */,
+				8E4809131F548FCC00BABAC4 /* CGRect+Helpers.swift */,
 				8EC4071E1F520DB500916B55 /* GenericTableDatasource.swift */,
 				8EC407201F52149E00916B55 /* SpecialColumnsDatasource.swift */,
 			);
@@ -359,6 +362,7 @@
 				8EC4071F1F520DB500916B55 /* GenericTableDatasource.swift in Sources */,
 				8E8A03641F3404040053CD09 /* ColumnTableView.xcdatamodeld in Sources */,
 				716CAA301F3A089300BC7F11 /* SpecialColumnsTableViewCell.swift in Sources */,
+				8E4809141F548FCC00BABAC4 /* CGRect+Helpers.swift in Sources */,
 				8E8A03991F340EE30053CD09 /* ColumnsHeaderView.swift in Sources */,
 				8E8A035C1F3404040053CD09 /* AppDelegate.swift in Sources */,
 			);

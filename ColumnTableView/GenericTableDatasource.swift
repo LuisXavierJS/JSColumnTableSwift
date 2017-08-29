@@ -15,6 +15,7 @@ protocol JSSetupableCellProtocol: class {
 }
 
 @objc protocol JSTableViewControllerProtocol: class {
+    var delegateDatasource: JSTableViewDelegateDatasource {get set}
     func numberOfSections(in tableView: UITableView) -> Int
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell

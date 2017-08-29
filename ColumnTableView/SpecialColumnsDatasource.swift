@@ -18,4 +18,8 @@ class SpecialColumnsDatasource: JSGenericColumnsTableController<SpecialColumnsTa
         self.tableView?.reloadData()
     }
     
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("coé rapaziada")
+    }
 }

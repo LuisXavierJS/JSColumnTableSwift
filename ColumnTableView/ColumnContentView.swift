@@ -27,40 +27,49 @@ open class ColumnFieldContent: NSObject {
     }
 }
 
+open class RightSeparationLineView: UIView {}
+open class LeftSeparationLineView: UIView {}
+
+
 open class ColumnContentView: UIView {
+    private var lastLayoutedBounds: CGRect = CGRect.zero
+    
+    
+    open var rightSeparatorLineWidth: CGFloat = 1
+    
+    open var leftSeparatorLineWidth: CGFloat = 1
+    
+    open var applyCustomSettingsToField: ((UIView)->Void) = ColumnContentView.applyCustomSettings
+    
+    open var fieldFixedRepositioningInsets: UIEdgeInsets?
+    
+    open var fieldRelativeRepositioningInsets: UIEdgeInsets = UIEdgeInsetsMake(0.1, 0.05, 0.1, 0.05)
+    
+    open var rightSeparatorFrameAlignments: [CGRectAlignment] = [.right(addendum:0.5)]
+    
+    open var leftSeparatorFrameAlignments: [CGRectAlignment] = [.left(addendum:-0.5)]
+    
+    open var fieldFrameAlignments: [CGRectAlignment] = [.horizontallyCentralized(addendum: 0), .verticallyCentralized(addendum:0)]
+    
     open private(set) var fieldContent: ColumnFieldContent!
     
     open private(set) var isShowing: Bool = true
     
-    open private(set) var widthConstraint: NSLayoutConstraint!
-    
     open private(set) var showingModeWidth: CGFloat = 0
     
-    open private(set) weak var rightSeparator: UIView!
+    open private(set) var rightSeparator: RightSeparationLineView = RightSeparationLineView()
     
-    open private(set) weak var leftSeparator: UIView!
+    open private(set) var leftSeparator: LeftSeparationLineView = LeftSeparationLineView()
     
     open private(set) var headerTitle: UILabel?
     
-    open private(set) var headerMode: ColumnFieldHeaderMode = .title
+    open private(set) var headerMode: ColumnFieldHeaderMode = .title    
     
-    open var fontOfHeaderTitle: UIFont? {
-        didSet{
-            self.updateHeaderTitleFont()
-        }
+    deinit {
+        self.rightSeparator.removeFromSuperview()
+        self.leftSeparator.removeFromSuperview()
+        self.fieldContent.field.removeFromSuperview()
     }
-    
-    private lazy var headerTitleConstraints: [NSLayoutConstraint] = {
-        return [self.headerTitle!.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                self.headerTitle!.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-                NSLayoutConstraint(item: self.headerTitle!,
-                                   attribute: .width,
-                                   relatedBy: .equal,
-                                   toItem: self,
-                                   attribute: .width,
-                                   multiplier: 0.9,
-                                   constant: 0)]
-    }()
     
     public init(withField field: ColumnFieldContent){
         self.fieldContent = field
@@ -74,75 +83,23 @@ open class ColumnContentView: UIView {
     }
     
     private func setupViews(){
-        self.translatesAutoresizingMaskIntoConstraints = false
         self.clipsToBounds = false
-        self.fieldContent.field.translatesAutoresizingMaskIntoConstraints = false
-        let rightLine = UIView()
-        let leftLine = UIView()
         
-        rightLine.translatesAutoresizingMaskIntoConstraints = false
-        leftLine.translatesAutoresizingMaskIntoConstraints = false
-        rightLine.backgroundColor = UIColor.black
-        leftLine.backgroundColor = UIColor.black
-        
-        self.addSubview(rightLine)
-        self.addSubview(leftLine)
+        rightSeparator.backgroundColor = UIColor.black
+        leftSeparator.backgroundColor = UIColor.black
+        self.fieldContent.field.backgroundColor = UIColor.orange.withAlphaComponent(0.5)
+        self.addSubview(leftSeparator)
         self.addSubview(self.fieldContent.field)
-        
-        self.rightSeparator = rightLine
-        self.leftSeparator = leftLine
-        
-        self.setupConstraints()
+        self.addSubview(rightSeparator)
     }
     
-    private func setupConstraints(){
-        var constraintsToActivate: [NSLayoutConstraint] = []
-        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-(s)-[view(l)]", metrics: ["s":-0.5,"l":0.5], views: ["view":self.leftSeparator]))
-        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l)]-(s)-|", metrics: ["s":-0.5,"l":0.5], views: ["view":self.rightSeparator]))
-        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-(s)-[view]-(s)-|", metrics: ["s":0], views: ["view":self.leftSeparator]))
-        constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-(s)-[view]-(s)-|", metrics: ["s":0], views: ["view":self.rightSeparator]))
-        constraintsToActivate.append(contentsOf: [self.fieldContent.field.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                                                  self.fieldContent.field.centerYAnchor.constraint(equalTo: self.centerYAnchor)])
-        if let size = self.fieldContent.preferredSizeOfField {
-            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(l@750)]", metrics: ["l":size.width], views: ["view":self.fieldContent.field]))
-            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:[view(a@750)]", metrics: ["a":size.height], views: ["view":self.fieldContent.field]))
-            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:[view(<=s@1000)]", metrics: nil, views: ["view":self.fieldContent.field,"s":self]))
-            constraintsToActivate.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:[view(<=s@1000)]", metrics: nil, views: ["view":self.fieldContent.field,"s":self]))
-        }else{
-            constraintsToActivate.append(NSLayoutConstraint(item: self.fieldContent.field,
-                                                            attribute: .width,
-                                                            relatedBy: .equal,
-                                                            toItem: self,
-                                                            attribute: .width,
-                                                            multiplier: 0.9,
-                                                            constant: 0))
-        
-            constraintsToActivate.append(NSLayoutConstraint(item: self.fieldContent.field,
-                                                            attribute: .height,
-                                                            relatedBy: .equal,
-                                                            toItem: self,
-                                                            attribute: .height,
-                                                            multiplier: 0.9,
-                                                            constant: 0))            
-        }
-        NSLayoutConstraint.activateIfNotActive(constraintsToActivate)
-    }
- 
     private func createHeaderTitle(){
         let label = UILabel()
         self.headerTitle = label
-        self.headerTitle?.translatesAutoresizingMaskIntoConstraints = false
         self.headerTitle?.adjustsFontSizeToFitWidth = true
         self.headerTitle?.text = self.fieldContent.title
-        self.updateHeaderTitleFont()
     }
-    
-    private func updateHeaderTitleFont(){
-        if let font = self.fontOfHeaderTitle {
-            self.headerTitle?.font = font
-        }
-    }
-    
+
     private func setFieldVisibility(showing: Bool){
         self.fieldContent.field.isUserInteractionEnabled = showing
         self.fieldContent.field.isOpaque = showing
@@ -154,7 +111,6 @@ open class ColumnContentView: UIView {
         case .title:
             if let headerTitle = self.headerTitle{
                 self.addSubview(headerTitle)
-                NSLayoutConstraint.activateIfNotActive(self.headerTitleConstraints)
             }else{
                 self.setFieldVisibility(showing: false)
                 self.createHeaderTitle()
@@ -172,26 +128,16 @@ open class ColumnContentView: UIView {
     
     private func hideHeader(){
         if let headerTitle = self.headerTitle{
-            NSLayoutConstraint.deactivate(self.headerTitleConstraints)
             headerTitle.removeFromSuperview()
         }else{
             self.setFieldVisibility(showing: true)
         }
     }
     
-    open func setWidth(constraint: NSLayoutConstraint){
-        if let actualWidthConstraint = self.widthConstraint{
-            NSLayoutConstraint.deactivate([actualWidthConstraint])
-        }
-        self.widthConstraint = constraint
-        self.widthConstraint.identifier = self.fieldContent.title
-        self.showingModeWidth = self.widthConstraint.constant
-    }
-    
     open func updateShowingModeWidth(_ width: CGFloat){
         self.showingModeWidth = width
         if self.isShowing {
-            self.widthConstraint.constant = self.showingModeWidth
+            self.frame = self.frame.with(width: width)
         }
     }
     
@@ -199,23 +145,65 @@ open class ColumnContentView: UIView {
         self.isShowing = true
         self.clipsToBounds = false
         self.alpha = 1
-        self.widthConstraint.constant = self.showingModeWidth
     }
     
     open func hide(){
         self.isShowing = false
         self.clipsToBounds = true
         self.alpha = 0
-        self.widthConstraint.constant = 0
     }
     
-    open func setHeaderMode(_ on: Bool, _ mode: ColumnFieldHeaderMode?, _ font: UIFont? = nil){
-        self.fontOfHeaderTitle = font
+    open func setHeaderMode(_ on: Bool, _ mode: ColumnFieldHeaderMode?){
         self.headerMode = mode ?? .title
         if on {
             self.showHeader()
         }else{
             self.hideHeader()
+        }
+    }
+    
+    //Atualizando o comprimento das colunas para se comportar de acordo com o layout atual da tabela.
+    func calculateSubviewsFrames(for base: CGRect){
+        if let size = self.fieldContent.preferredSizeOfField {
+            self.fieldContent.field.frame.size = size.limitedTo(base.size)
+        }else{
+            self.fieldContent.field.frame.size = base.size
+        }
+        self.applyCustomSettingsToField(self.fieldContent.field)
+        
+        self.headerTitle?.frame = self.bounds.insetBy(dx: 5, dy: 5)
+        self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: base)
+        self.rightSeparator.frame = self.bounds.with(width: self.rightSeparatorLineWidth).aligned(self.rightSeparatorFrameAlignments, in: self.bounds)
+        self.leftSeparator.frame = self.bounds.with(width: self.leftSeparatorLineWidth).aligned(self.leftSeparatorFrameAlignments, in: self.bounds)
+    }
+    
+    func baseSubviewsArea() -> CGRect {
+        if let insets = self.fieldFixedRepositioningInsets {
+            return self.bounds.insetBy(left: insets.left,
+                                       right: insets.right,
+                                       top: insets.top,
+                                       bottom: insets.bottom)
+        }else {
+            let insets = self.fieldRelativeRepositioningInsets
+            return self.bounds.insetBy(left: self.bounds.width*insets.left,
+                                       right: self.bounds.width*insets.right * 2,
+                                       top: self.bounds.height*insets.top,
+                                       bottom: self.bounds.height*insets.bottom * 2)
+        }
+    }
+    
+    //Atualiza o comprimento das constraints conforme o layout atual da tabela.
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        if self.lastLayoutedBounds != self.bounds {
+            self.calculateSubviewsFrames(for: self.baseSubviewsArea())
+        }
+        self.lastLayoutedBounds = self.bounds
+    }
+    
+    static func applyCustomSettings(_ field: UIView){
+        if let label = field as? UILabel, label.numberOfLines == 0 {
+            label.frame.size = label.sizeThatFits(CGSize(width: label.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
         }
     }
 }
