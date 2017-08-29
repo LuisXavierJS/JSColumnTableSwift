@@ -169,7 +169,7 @@ open class ColumnContentView: UIView {
     func calculateSubviewsFrames(for base: CGRect){
         if let cached = self.cachedColumn {
             
-            self.headerTitle?.frame = cached.headerTitle?.frame ?? CGRect.zero
+            self.headerTitle?.frame = cached.headerTitle?.frame ?? self.bounds.insetBy(dx: 5, dy: 5)
             self.rightSeparator.frame = cached.rightSeparator.frame
             self.leftSeparator.frame = cached.leftSeparator.frame
             
