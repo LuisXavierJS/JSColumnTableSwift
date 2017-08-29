@@ -21,22 +21,22 @@ class SpecialColumnsTableViewCell: ColumnsTableViewCell, JSSetupableCellProtocol
 //            ColumnFieldContent(atualizar,title: "atualizar", CGSize(width:50,height:30)),
             ColumnFieldContent(nome, title: "nome"),
             ColumnFieldContent(another, title: "nome"),
-            ColumnFieldContent(executar,title: "executar", CGSize(width:200,height:50)),
+            ColumnFieldContent(executar,title: "executar", CGSize(width:500,height:50)),
 //            ColumnFieldContent(imagem,title:"imagem", CGSize(width: 100, height: 50))
         ]
     }
     
-//    func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
-//        return Array<CGFloat>(arrayLiteral: 400,200,200,200,50)[index]
-//    }
-//    
+    func preferredInitialFixedWidth(forColumnAt index: Int) -> CGFloat {
+        return Array<CGFloat>(arrayLiteral: 300,200,200,200,50)[index]
+    }
+//
     override func setupViews() {
         super.setupViews()
 //        self.nome.backgroundColor = UIColor.green
 //        self.another.backgroundColor = UIColor.blue
 //        self.executar.backgroundColor = UIColor.cyan
-        self.nome.text = "RAPAAAZIAAADAA"
-        self.another.text = "COEEEEEEH"
+        self.nome.text = "COEEEEEEH"
+        self.another.text = "RAPAAAZIAAADAA"
         self.executar.setTitle("COÉ RAPAZIADA", for: .normal)
         self.executar.layer.borderColor = UIColor.generateRandomColor().cgColor
         self.executar.backgroundColor = UIColor.white

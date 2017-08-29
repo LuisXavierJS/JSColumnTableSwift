@@ -43,7 +43,7 @@ open class ColumnContentView: UIView {
     
     open var fieldFixedRepositioningInsets: UIEdgeInsets?
     
-    open var fieldRelativeRepositioningInsets: UIEdgeInsets = UIEdgeInsetsMake(0.025, 0.025, 0.025, 0.025)
+    open var fieldRelativeRepositioningInsets: UIEdgeInsets = UIEdgeInsetsMake(0.1, 0.05, 0.1, 0.05)
     
     open var rightSeparatorFrameAlignments: [CGRectAlignment] = [.right(addendum:0.5)]
     
@@ -93,7 +93,7 @@ open class ColumnContentView: UIView {
         
         rightSeparator.backgroundColor = UIColor.black
         leftSeparator.backgroundColor = UIColor.black
-        
+        self.fieldContent.field.backgroundColor = UIColor.orange.withAlphaComponent(0.5)
         self.addSubview(leftSeparator)
         self.addSubview(self.fieldContent.field)
         self.addSubview(rightSeparator)
@@ -185,7 +185,7 @@ open class ColumnContentView: UIView {
         }
         self.applyCustomSettingsToField(self.fieldContent.field)
         
-        self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: self.bounds)
+        self.fieldContent.field.frame = self.fieldContent.field.frame.aligned(self.fieldFrameAlignments, in: base)
         self.rightSeparator.frame = self.bounds.with(width: self.rightSeparatorLineWidth).aligned(self.rightSeparatorFrameAlignments, in: self.bounds)
         self.leftSeparator.frame = self.bounds.with(width: self.leftSeparatorLineWidth).aligned(self.leftSeparatorFrameAlignments, in: self.bounds)
     }
@@ -199,9 +199,9 @@ open class ColumnContentView: UIView {
         }else {
             let insets = self.fieldRelativeRepositioningInsets
             return self.bounds.insetBy(left: self.bounds.width*insets.left,
-                                       right: self.bounds.width*insets.right,
+                                       right: self.bounds.width*insets.right * 2,
                                        top: self.bounds.height*insets.top,
-                                       bottom: self.bounds.height*insets.bottom)
+                                       bottom: self.bounds.height*insets.bottom * 2)
         }
     }
     
