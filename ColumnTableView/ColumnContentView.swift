@@ -63,13 +63,7 @@ open class ColumnContentView: UIView {
     
     open private(set) var headerTitle: UILabel?
     
-    open private(set) var headerMode: ColumnFieldHeaderMode = .title
-    
-    open var fontOfHeaderTitle: UIFont? {
-        didSet{
-            self.updateHeaderTitleFont()
-        }
-    }
+    open private(set) var headerMode: ColumnFieldHeaderMode = .title    
     
     deinit {
         self.rightSeparator.removeFromSuperview()
@@ -104,15 +98,8 @@ open class ColumnContentView: UIView {
         self.headerTitle = label
         self.headerTitle?.adjustsFontSizeToFitWidth = true
         self.headerTitle?.text = self.fieldContent.title
-        self.updateHeaderTitleFont()
     }
-    
-    private func updateHeaderTitleFont(){
-        if let font = self.fontOfHeaderTitle {
-            self.headerTitle?.font = font
-        }
-    }
-    
+
     private func setFieldVisibility(showing: Bool){
         self.fieldContent.field.isUserInteractionEnabled = showing
         self.fieldContent.field.isOpaque = showing
@@ -166,8 +153,7 @@ open class ColumnContentView: UIView {
         self.alpha = 0
     }
     
-    open func setHeaderMode(_ on: Bool, _ mode: ColumnFieldHeaderMode?, _ font: UIFont? = nil){
-        self.fontOfHeaderTitle = font
+    open func setHeaderMode(_ on: Bool, _ mode: ColumnFieldHeaderMode?){
         self.headerMode = mode ?? .title
         if on {
             self.showHeader()

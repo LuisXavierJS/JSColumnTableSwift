@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnHeaderControllerDelegate, ColumnsViewProtocol {
+open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterView, ColumnsViewProtocol {
     private var columnsViewContainerCell: T = T()
     
     open weak var columnsViewContainer: ColumnsViewContainer! {
@@ -27,7 +27,6 @@ open class ColumnsHeaderView<T:ColumnsTableViewCell>: UITableViewHeaderFooterVie
 
     private func setupViews(){
         self.columnsViewContainerCell.setupViews()
-        self.columnsViewContainer.headerDelegate = self
         self.addSubview(self.columnsViewContainer)
         self.columnsViewContainer.setHeaderMode(true)
     }

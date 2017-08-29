@@ -29,15 +29,12 @@ import UIKit
 // -  Se nao for implementado, a preferencia de largura inicial sera igual para todas as colunas.
 // -  Se for implementado mas retornar valores que nao representem o real tamanho da ColumnsViewCell, as colunas finais podem desaparecer ou a mainColumn pode aumentar para compensar a diferenca de tamanho.
     @objc optional func preferredRelativeWidth(forColumnAt index: Int) -> CGFloat
-}
-
-@objc public protocol ColumnHeaderControllerDelegate: class {
-//  Informa qual a fonte utilizada para o titulo do label de cabecalho de uma determinada coluna
-// - Se nao for implementado, utiliza a font padrao de um label
-    @objc optional func fontForHeader(forColumnAt index: Int) -> UIFont
     
-//  Informa o tipo de cabecalho para uma determinada coluna (Se vai ser um label de titulo, o proprio campo ou nada)
-// - Se nao for implementado, utiliza o default (label de titulo)
+    //  Pede para o delegate configurar o label a ser exibido no header
+    @objc optional func applySettingsOn(headearLabel label: UILabel?, forColumnAt index: Int)
+    
+    //  Informa o tipo de cabecalho para uma determinada coluna (Se vai ser um label de titulo, o proprio campo ou nada)
+    // - Se nao for implementado, utiliza o default (label de titulo)
     @objc optional func headerMode(forColumnAt index: Int) -> ColumnFieldHeaderMode
 }
 
@@ -53,7 +50,6 @@ open class ColumnsViewContainer: UIView {
     }()
     
     open weak var delegate: ColumnsViewContainerControllerDelegate?
-    open weak var headerDelegate: ColumnHeaderControllerDelegate?
     
     open var normalModeBackgroundColor: UIColor = UIColor.clear
     open var headerModeBackgroundColor: UIColor = UIColor.lightGray
@@ -164,14 +160,12 @@ open class ColumnsViewContainer: UIView {
     
     //Ativa o modo de cabecalho das colunas
     open func setHeaderMode(_ on: Bool){
-        guard let headerDelegate = self.headerDelegate else {return}
+        guard let headerDelegate = self.delegate else {return}
         self.backgroundColor = on ? self.headerModeBackgroundColor : self.normalModeBackgroundColor
-        var index: Int = 0
-        self.columns.forEach({
+        self.columns.enumerated().forEach({ (index, column) in
             let headerMode = headerDelegate.headerMode?(forColumnAt: index)
-            let font = headerDelegate.fontForHeader?(forColumnAt: index)
-            $0.setHeaderMode(on,headerMode,font)
-            index+=1
+            column.setHeaderMode(on,headerMode)
+            headerDelegate.applySettingsOn?(headearLabel: column.headerTitle, forColumnAt: index)
         })
     }
     
