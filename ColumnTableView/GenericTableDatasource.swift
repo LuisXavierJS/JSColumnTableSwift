@@ -9,12 +9,12 @@
 import UIKit
 
 
-protocol JSSetupableCellProtocol: class {
+public protocol JSSetupableCellProtocol: class {
     associatedtype DataType
     func setup(_ object: DataType)
 }
 
-@objc protocol JSTableViewControllerProtocol: class {
+@objc public protocol JSTableViewControllerProtocol: class {
     var delegateDatasource: JSTableViewDelegateDatasource {get set}
     func numberOfSections(in tableView: UITableView) -> Int
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -68,81 +68,81 @@ protocol JSSetupableCellProtocol: class {
     @objc optional func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
 }
 
-class JSTableViewDelegateDatasource: NSObject, UITableViewDataSource, UITableViewDelegate {
+open class JSTableViewDelegateDatasource: NSObject, UITableViewDataSource, UITableViewDelegate {
     weak var delegate: JSTableViewControllerProtocol!
     
     //MARK: REQUIRED METHODS
     
-    func numberOfSections(in tableView: UITableView) -> Int {
+    open func numberOfSections(in tableView: UITableView) -> Int {
         return self.delegate.numberOfSections(in:tableView)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.delegate.tableView(tableView,numberOfRowsInSection:section)
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return self.delegate.tableView(tableView,cellForRowAt:indexPath)
     }
     
     //MARK: OPTIONAL METHODS
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return self.delegate.tableView?(tableView,viewForHeaderInSection:section)
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return self.delegate.tableView?(tableView,viewForFooterInSection:section)
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    open func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return self.delegate.tableView?(tableView,editActionsForRowAt:indexPath)
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return self.delegate.tableView?(tableView,editingStyleForRowAt:indexPath) ?? .none
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.delegate.tableView?(tableView, didSelectRowAt: indexPath)
     }
 }
 
-class JSGenericTableController<CellType: JSSetupableCellProtocol>: NSObject, JSTableViewControllerProtocol where CellType: UITableViewCell {
-    typealias DataType = CellType.DataType
+open class JSGenericTableController<CellType: JSSetupableCellProtocol>: NSObject, JSTableViewControllerProtocol where CellType: UITableViewCell {
+    public typealias DataType = CellType.DataType
     
-    var items: [[DataType]] = []
+    open var items: [[DataType]] = []
     
-    lazy var delegateDatasource: JSTableViewDelegateDatasource = {
+    open lazy var delegateDatasource: JSTableViewDelegateDatasource = {
         return JSTableViewDelegateDatasource()
     }()
     
-    fileprivate(set) weak var tableView: UITableView?
+    open weak var tableView: UITableView?
     
-    var cellIdentifier: String {
+    open var cellIdentifier: String {
         return CellType.className()
     }
     
-    init<T:UITableView>(tableView: T){
+    public init<T:UITableView>(tableView: T){
         self.tableView = tableView
         super.init()
         self.delegateDatasource.delegate = self
     }
     
-    func reloadData(with items: [[DataType]]) {
+    public func reloadData(with items: [[DataType]]) {
         self.items = items
         self.tableView?.reloadData()
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
+    open func numberOfSections(in tableView: UITableView) -> Int {
         return self.items.count
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.items[section].count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier,
                                                  for: indexPath) as! CellType
         cell.setup(self.items[indexPath.section][indexPath.row])
@@ -151,27 +151,27 @@ class JSGenericTableController<CellType: JSSetupableCellProtocol>: NSObject, JST
     
 }
 
-class JSGenericColumnsTableController<CellType: JSSetupableCellProtocol>: JSGenericTableController<CellType> where CellType: ColumnsTableViewCell {
-    var headerIdentifier: String {
+open class JSGenericColumnsTableController<CellType: JSSetupableCellProtocol>: JSGenericTableController<CellType> where CellType: ColumnsTableViewCell {
+    open var headerIdentifier: String {
         return ColumnsHeaderView<CellType>.className()
     }
     
-    weak var columnsTableView: ColumnsTableView? {
+    open weak var columnsTableView: ColumnsTableView? {
         return self.tableView as? ColumnsTableView
     }
     
-    init(columnsTableView: ColumnsTableView) {
+    public init(columnsTableView: ColumnsTableView) {
         super.init(tableView: columnsTableView)
         self.register()
         self.tableView?.sectionHeaderHeight = 40
         self.tableView?.estimatedSectionHeaderHeight = 40
     }
     
-    func register(){
+    open func register(){
         self.columnsTableView?.registerCellAndHeader(forCellType: CellType.self)
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: headerIdentifier)
     }
     
